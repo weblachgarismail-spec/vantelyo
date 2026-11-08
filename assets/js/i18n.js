@@ -29,6 +29,7 @@ const translations = {
     blogTitle: "Latest Articles",
     blogPageTitle: "Blog — SmartLife Innovations",
     blogSub: "Practical guides on food waste, kitchen organization, productivity and digital life.",
+    blogCount: "34 articles available in English, French and Arabic.",
     readMore: "Read more →",
     about: "About",
     aboutText: "SmartLife Innovations is an independent editorial platform around mobile apps, technology and digital solutions.",
@@ -71,6 +72,15 @@ const translations = {
     consentText: "We use essential cookies to run this site. With your consent, we may also use Google AdSense cookies to show ads. You can accept or decline non-essential cookies.",
     consentAccept: "Accept",
     consentDecline: "Decline",
+    consentRejectAll: "Reject all",
+    consentAcceptAll: "Accept all",
+    consentSave: "Save choices",
+    consentNecessary: "Essential",
+    consentNecessaryDesc: "Required for the site to work. Always on.",
+    consentAnalytics: "Analytics",
+    consentAnalyticsDesc: "Anonymous audience measurement.",
+    consentAds: "Advertising",
+    consentAdsDesc: "Google AdSense advertising cookies.",
     consentSettings: "Cookie settings",
     publisherTitle: "Publisher information",
     supportTitle: "Support the project",
@@ -83,7 +93,7 @@ const translations = {
     legalNotice: "Legal notice",
     editorialPolicy: "Editorial policy",
     lastUpdated: "Last updated",
-    authorTeam: "SmartLife Innovations editorial team",
+    authorTeam: "SmartLife Innovations",
     footerPublisher: "Published by SmartLife Innovations — independent editorial platform.",
     skipToContent: "Skip to content"
   },
@@ -113,6 +123,7 @@ const translations = {
     blogTitle: "Derniers articles",
     blogPageTitle: "Blog — SmartLife Innovations",
     blogSub: "Guides pratiques sur le gaspillage alimentaire, l'organisation de cuisine, la productivité et la vie numérique.",
+    blogCount: "34 articles disponibles en anglais, français et arabe.",
     readMore: "Lire la suite →",
     about: "À propos",
     aboutText: "SmartLife Innovations est une plateforme éditoriale indépendante autour des applications mobiles, de la technologie et des solutions numériques.",
@@ -155,6 +166,15 @@ const translations = {
     consentText: "Nous utilisons des cookies essentiels pour faire fonctionner le site. Avec votre consentement, nous pouvons aussi utiliser des cookies Google AdSense pour afficher des annonces. Vous pouvez accepter ou refuser les cookies non essentiels.",
     consentAccept: "Accepter",
     consentDecline: "Refuser",
+    consentRejectAll: "Tout refuser",
+    consentAcceptAll: "Tout accepter",
+    consentSave: "Enregistrer mes choix",
+    consentNecessary: "Essentiels",
+    consentNecessaryDesc: "Nécessaires au fonctionnement du site. Toujours actifs.",
+    consentAnalytics: "Mesure d'audience",
+    consentAnalyticsDesc: "Mesure anonyme de l'audience.",
+    consentAds: "Publicité",
+    consentAdsDesc: "Cookies publicitaires Google AdSense.",
     consentSettings: "Paramètres des cookies",
     publisherTitle: "Informations sur l'éditeur",
     supportTitle: "Soutenir le projet",
@@ -197,6 +217,7 @@ const translations = {
     blogTitle: "أحدث المقالات",
     blogPageTitle: "المدونة — SmartLife Innovations",
     blogSub: "دروس عملية حول هدر الطعام، تنظيم المطبخ، الإنتاجية والحياة الرقمية.",
+    blogCount: "34 مقالاً متاحاً بالإنجليزية والفرنسية والعربية.",
     readMore: "اقرأ المزيد →",
     about: "عن الموقع",
     aboutText: "SmartLife Innovations منصة تحريرية مستقلة حول التطبيقات الجوالة والتكنولوجيا والحلول الرقمية.",
@@ -239,6 +260,15 @@ const translations = {
     consentText: "نستخدم ملفات تعريف ارتباط أساسية لتشغيل الموقع. بموافقتك، قد نستخدم أيضًا ملفات تعريف ارتباط Google AdSense لعرض الإعلانات. يمكنك قبول أو رفض الملفات غير الأساسية.",
     consentAccept: "قبول",
     consentDecline: "رفض",
+    consentRejectAll: "رفض الكل",
+    consentAcceptAll: "قبول الكل",
+    consentSave: "حفظ الخيارات",
+    consentNecessary: "أساسية",
+    consentNecessaryDesc: "ضرورية لعمل الموقع. نشطة دائماً.",
+    consentAnalytics: "التحليلات",
+    consentAnalyticsDesc: "قياس مجهول للجمهور.",
+    consentAds: "الإعلانات",
+    consentAdsDesc: "ملفات تعريف ارتباط إعلانات Google AdSense.",
     consentSettings: "إعدادات ملفات تعريف الارتباط",
     publisherTitle: "معلومات الناشر",
     supportTitle: "دعم المشروع",
@@ -276,6 +306,10 @@ function detectLang() {
   } catch (e) {}
   if (urlLang && translations[urlLang]) return urlLang;
   if (saved && translations[saved]) return saved;
+  // Article pages declare their content language; use it for the UI too so an
+  // Arabic or French article opens with matching navigation labels.
+  const contentLang = document.documentElement.getAttribute('data-content-lang');
+  if (contentLang && translations[contentLang]) return contentLang;
   return 'en';
 }
 
