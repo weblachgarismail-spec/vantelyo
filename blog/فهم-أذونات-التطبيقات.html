@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-content-lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>فهم أذونات التطبيقات — Vantelyo</title>
+  <meta name="description" content="الأذونات هي حقوق الوصول التي يطلبها التطبيق. تعرّف على كيفية مراجعتها ورفض غير الضرورية.">
+  <meta name="author" content="Vantelyo">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://weblachgarismail-spec.github.io/smartlifehub/blog/فهم-أذونات-التطبيقات.html">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/logo.svg">
+  <link rel="alternate" hreflang="en" href="https://weblachgarismail-spec.github.io/smartlifehub/blog/understanding-app-permissions.html">
+  <link rel="alternate" hreflang="fr" href="https://weblachgarismail-spec.github.io/smartlifehub/blog/comprendre-autorisations-applications.html">
+  <link rel="alternate" hreflang="ar" href="https://weblachgarismail-spec.github.io/smartlifehub/blog/فهم-أذونات-التطبيقات.html">
+  <link rel="alternate" hreflang="x-default" href="https://weblachgarismail-spec.github.io/smartlifehub/blog/understanding-app-permissions.html">
+  <meta property="og:site_name" content="Vantelyo">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="فهم أذونات التطبيقات">
+  <meta property="og:description" content="الأذونات هي حقوق الوصول التي يطلبها التطبيق. تعرّف على كيفية مراجعتها ورفض غير الضرورية.">
+  <meta property="og:url" content="https://weblachgarismail-spec.github.io/smartlifehub/blog/فهم-أذونات-التطبيقات.html">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=900&amp;auto=format&amp;fit=crop">
+  <meta property="og:image:alt" content="فهم أذونات التطبيقات">
+  <meta property="og:locale" content="ar_AR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="فهم أذونات التطبيقات">
+  <meta name="twitter:description" content="الأذونات هي حقوق الوصول التي يطلبها التطبيق. تعرّف على كيفية مراجعتها ورفض غير الضرورية.">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=900&amp;auto=format&amp;fit=crop">
+  <meta name="theme-color" content="#2D5A27">
+  <link rel="stylesheet" href="../assets/css/style.css?v=6">
+  <script src="../assets/js/i18n.js?v=6" defer></script>
+  <script src="../assets/js/main.js?v=6" defer></script>
+  <script src="../assets/js/consent.js?v=6" defer></script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"فهم أذونات التطبيقات","description":"الأذونات هي حقوق الوصول التي يطلبها التطبيق. تعرّف على كيفية مراجعتها ورفض غير الضرورية.","image":"https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=900&auto=format&fit=crop","datePublished":"2026-02-02","dateModified":"2026-11-08","inLanguage":"ar","articleSection":"الخصوصية والأمان","author":{"@type":"Organization","name":"Vantelyo"},"publisher":{"@type":"Organization","name":"Vantelyo","logo":{"@type":"ImageObject","url":"https://weblachgarismail-spec.github.io/smartlifehub/assets/img/logo.svg"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://weblachgarismail-spec.github.io/smartlifehub/blog/فهم-أذونات-التطبيقات.html"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://weblachgarismail-spec.github.io/smartlifehub/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://weblachgarismail-spec.github.io/smartlifehub/blog/"},{"@type":"ListItem","position":3,"name":"فهم أذونات التطبيقات","item":"https://weblachgarismail-spec.github.io/smartlifehub/blog/فهم-أذونات-التطبيقات.html"}]}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skipToContent">Skip to content</a>
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <button class="mobile-menu-btn" aria-label="Menu" aria-expanded="false">☰</button>
+        <div class="nav-brand"><a href="../index.html"><span>Smart</span>Life Innovations</a></div>
+        <div class="lang-switch">
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="fr">FR</button>
+          <button class="lang-btn" data-lang="ar">AR</button>
+        </div>
+        <ul class="nav-links">
+          <li><a href="../apps/index.html" data-i18n="navApps">Apps</a></li>
+          <li><a href="index.html" data-i18n="navBlog">Blog</a></li>
+          <li><a href="../about.html" data-i18n="navAbout">About</a></li>
+          <li><a href="../contact.html" data-i18n="navContact">Contact</a></li>
+          <li><a href="../privacy.html" data-i18n="navPrivacy">Privacy</a></li>
+          <li><a href="../publisher.html" data-i18n="navPublisher">Publisher</a></li>
+          <li><a href="../support.html" data-i18n="navSupport">Support</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="section">
+    <div class="container">
+      <div class="article-wrap">
+        <a class="article-back" href="index.html" data-i18n="articleBack">← Back to all articles</a>
+        <article>
+          <header class="article-header">
+            <h1>فهم أذونات التطبيقات</h1>
+            <div class="article-meta">
+              <span class="article-category">الخصوصية والأمان</span>
+              <span>2 فبراير 2026</span>
+              <span>4 min</span>
+              <span data-i18n="publishedBy">Published by</span>
+              <span>Vantelyo</span>
+            </div>
+            <a class="lang-alt" href="understanding-app-permissions.html">Read in English →</a> <a class="lang-alt" href="comprendre-autorisations-applications.html">Lire en français →</a>
+          </header>
+          <img class="article-cover" src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=900&amp;auto=format&amp;fit=crop" alt="فهم أذونات التطبيقات" loading="eager">
+          <div class="ad-slot ad-slot--empty" data-ad-slot="0000000000">
+            <span class="ad-label" data-i18n="adLabel">Advertisement</span>
+          </div>
+          <div class="article-body">
+            <h2>ما هي أذونات التطبيقات؟</h2>
+<p>أذونات التطبيقات هي حقوق الوصول التي يطلبها التطبيق لاستخدام ميزات جهازك — الكاميرا، الميكروفون، الموقع، جهات الاتصال، الإشعارات، وأكثر.</p>
+<h2>مشكلة الأذونات "مقدماً"</h2>
+<p>العديد من التطبيقات تطلب جميع الأذونات وقت التثبيت، قبل أن تستخدمها حتى. هذا علامة حمراء للخصوصية. تطبيق حاسبة يطلب جهات الاتصال عند التثبيت غير ضروري ومشبوه.</p>
+<h2>الأذونات "في الوقت المناسب"</h2>
+<p>التطبيقات الجيدة تطلب الأذونات فقط عندما تحتاجها:</p>
+<ul>
+<li>تطبيق كاميرا يطلب الوصول إلى الكاميرا عند النقر على زر الصورة</li>
+<li>تطبيق ملاحة يطلب الموقع عند بدء الملاحة</li>
+<li>تطبيق جهات اتصال يطلب جهات الاتصال عند فتح دفتر العناوين</li>
+</ul>
+<h2>كيف يتعامل FreshGuard مع الأذونات</h2>
+<p>يستخدم FreshGuard أذونات "في الوقت المناسب":</p>
+<ul>
+<li><strong>الكاميرا:</strong> تُطلب فقط عند النقر على زر المسح لقراءة الباركود</li>
+<li><strong>الإشعارات:</strong> تمكينها فقط عند حفظ عنصر بتاريخ انتهاء — ويمكنك تعطيلها في أي وقت</li>
+<li><strong>لا أذونات أخرى:</strong> لا يطلب FreshGuard الموقع أو جهات الاتصال أو الميكروفون أبداً</li>
+</ul>
+<h2>كيف تراجع الأذونات على هاتفك</h2>
+<h3>Android:</h3>
+<ul>
+<li>الإعدادات → التطبيقات → [اسم التطبيق] → الأذونات</li>
+<li>أو: الإعدادات → الخصوصية → مدير الأذونات</li>
+</ul>
+<h3>iOS:</h3>
+<ul>
+<li>الإعدادات → [اسم التطبيق] → مراجعة الأذونات</li>
+<li>أو: الإعدادات → الخصوصية والأمان → [نوع الأذون]</li>
+</ul>
+<h2>اتخذ إجراءً</h2>
+<p>راجع أذونات تطبيقاتك اليوم. ألغِ الأذونات التي لا معنى لها. اختر تطبيقات مثل FreshGuard التي تطلب الأذونات فقط عند الحاجة.</p>
+<h2>الأذونات "في الوقت المناسب" هي الافتراض الأكثر أماناً</h2>
+<p>يجب أن يطلب التطبيق الكاميرا فقط عند مسح باركود، والموقع فقط عندما تتطلب ميزة ما ذلك فعلاً. كن حذراً مع التطبيقات التي تطلب الوصول قبل أن تفهم الغرض. إن لم يتطابق الأذون مع الوظيفة الأساسية للتطبيق، فارفضه وابحث عن بديل.</p>
+<h2>قائمة تحقق عملية</h2>
+<ul>
+<li>راجع الأذونات مرة كل ربع سنة.</li>
+<li>فضّل "أثناء استخدام التطبيق" للوصول إلى الموقع.</li>
+<li>ألغِ الوصول إلى الكاميرا والميكروفون وجهات الاتصال عند عدم الاستخدام.</li>
+<li>عطّل تخصيص الإعلانات إن كنت تفضل إعلانات غير مستهدفة.</li>
+<li>أبقِ جهازك مشفرّاً وانسخ بياناتك المهمة.</li>
+</ul>
+<h2>موقفنا</h2>
+<p>لا تتطلب Vantelyo حسابات لتطبيقاتها، ولا تبيع البيانات الشخصية، وتُصمّم الميزات الأساسية للعمل بدون اتصال. حيث يمكن إدخال إعلانات أو تحليلات، نشرح ذلك في سياسة الخصوصية ونطلب الموافقة أولاً.</p>
+<h2>المصادر وقراءات إضافية</h2>
+<ul>
+<li><a href="https://www.eff.org/issues/privacy" target="_blank" rel="noopener">EFF — Privacy</a></li>
+<li><a href="https://www.ftc.gov/business-guidance/privacy-security" target="_blank" rel="noopener">FTC — Privacy and Security</a></li>
+<li><a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener">Google — Advertising technologies</a></li>
+<li><a href="https://adssettings.google.com/" target="_blank" rel="noopener">Google Ads Settings</a></li>
+</ul>
+          </div>
+          <section class="related-reading">
+            <h2>اقرأ أيضاً</h2>
+            <ul>
+              <li><a href="قائمة-التحقق-لخصوصية-التطبيقات.html">قائمة التحقق لخصوصية التطبيقات</a></li>
+              <li><a href="لماذا-يهم-التخزين-المحلي.html">لماذا يهم التخزين المحلي</a></li>
+              <li><a href="تقليل-هدر-الطعام-في-المنزل.html">كيفية تقليل هدر الطعام في المنزل: دليل كامل</a></li>
+              <li><a href="../apps/freshguard/index.html">اكتشف تطبيق FreshGuard</a></li>
+            </ul>
+          </section>
+          <div class="publisher-box">
+            نُشر بواسطة <strong>Vantelyo</strong> — منصة تحريرية مستقلة. هذا المقال لأغراض معلوماتية عامة ولا يُغني عن استشارة مختص. هل لديك سؤال أو تصحيح؟ <a href="../contact.html">تواصل مع فريق التحرير</a>.
+          </div>
+          <div class="ad-slot ad-slot--empty" data-ad-slot="0000000000">
+            <span class="ad-label" data-i18n="adLabel">Advertisement</span>
+          </div>
+          <p style="margin-top: 2rem;"><a class="article-back" href="index.html" data-i18n="articleBack">← Back to all articles</a></p>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Vantelyo</h4>
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;" data-i18n="footerPublisher">Published by Vantelyo — independent editorial platform.</p>
+        </div>
+        <div class="footer-col">
+          <h4 data-i18n="appsTitle">Apps</h4>
+          <ul>
+            <li><a href="../apps/freshguard/index.html">FreshGuard</a></li>
+            <li><a href="../apps/index.html" data-i18n="navApps">Apps</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Sections</h4>
+          <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html" data-i18n="navBlog">Blog</a></li>
+            <li><a href="../about.html" data-i18n="navAbout">About</a></li>
+            <li><a href="../contact.html" data-i18n="navContact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 data-i18n="legalNotice">Legal notice</h4>
+          <ul>
+            <li><a href="../privacy.html" data-i18n="navPrivacy">Privacy Policy</a></li>
+            <li><a href="../terms.html" data-i18n="navTerms">Terms</a></li>
+            <li><a href="../publisher.html" data-i18n="navPublisher">Publisher</a></li>
+            <li><a href="../support.html" data-i18n="navSupport">Support</a></li>
+            <li><a href="#" class="js-consent-settings" data-i18n="consentSettings">Cookie settings</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span data-i18n="footerRights">© 2026 Vantelyo. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var altMap = {"en":"understanding-app-permissions.html","fr":"comprendre-autorisations-applications.html"};
+      document.querySelectorAll('.lang-btn').forEach(function (btn) {
+        var href = altMap[btn.getAttribute('data-lang')];
+        if (!href) return;
+        btn.addEventListener('click', function (event) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          try { window.localStorage.setItem('sli-lang', btn.getAttribute('data-lang')); } catch (e) {}
+          window.location.href = href;
+        }, true);
+      });
+    });
+  </script>
+</body>
+</html>

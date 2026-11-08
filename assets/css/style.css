@@ -1,5 +1,5 @@
 /* =========================================
-   SmartLife Innovations — Main Stylesheet
+   Vantelyo — Main Stylesheet
    ========================================= */
 :root {
   --sage: #8FA68B;
@@ -527,6 +527,55 @@ footer {
 .article-body a {
   color: var(--sage-dark);
   text-decoration: underline;
+}
+
+.article-figure {
+  margin: 1.75rem 0;
+}
+
+.article-figure img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--radius);
+  background: var(--cream-dark);
+}
+
+.article-figure figcaption {
+  margin-top: 0.6rem;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.article-body table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 1.25rem 0;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.article-body th,
+.article-body td {
+  border: 1px solid var(--border);
+  padding: 0.55rem 0.7rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.article-body th {
+  background: var(--cream-dark);
+  color: var(--dark-green);
+  font-weight: 600;
+}
+
+[dir="rtl"] .article-body th,
+[dir="rtl"] .article-body td {
+  text-align: right;
 }
 
 .lang-alt {

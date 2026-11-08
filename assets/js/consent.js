@@ -1,5 +1,5 @@
 /* =========================================
-   SmartLife Innovations — Consent & AdSense
+   Vantelyo — Consent & AdSense
    Ads stay disabled until a real publisher ID
    is configured below AND the visitor opts in.
    ========================================= */

@@ -1,4 +1,4 @@
-# ads.txt — SmartLife Innovations
+# ads.txt — Vantelyo
 # Replace pub-XXXXXXXXXXXXXXXX with your AdSense publisher ID before enabling ads.
 # Example: google.com, pub-1234567890123456, DIRECT, f08c47fec0942fa0
 

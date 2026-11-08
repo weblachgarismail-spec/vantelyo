@@ -1,5 +1,5 @@
 /* =========================================
-   SmartLife Innovations — Main Script
+   Vantelyo — Main Script
    ========================================= */
 document.addEventListener('DOMContentLoaded', () => {
   // Mobile menu toggle
