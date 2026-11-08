@@ -543,6 +543,41 @@ footer {
   background: var(--white);
 }
 
+.related-reading {
+  margin-top: 2.5rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--cream-dark);
+  border-radius: var(--radius);
+}
+
+.related-reading h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.15rem;
+  color: var(--dark-green);
+}
+
+.related-reading ul {
+  margin: 0 0 0 1.25rem;
+  padding: 0;
+}
+
+.related-reading li {
+  margin-bottom: 0.45rem;
+  line-height: 1.5;
+}
+
+.related-reading a {
+  color: var(--dark-green);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+[dir="rtl"] .related-reading ul {
+  margin-right: 1.25rem;
+  margin-left: 0;
+}
+
 .publisher-box {
   margin-top: 2.5rem;
   padding: 1.25rem 1.5rem;
