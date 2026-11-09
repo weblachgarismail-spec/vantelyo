@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin.html
 Disallow: /blog/post.html
 
-Sitemap: https://weblachgarismail-spec.github.io/vantelyo/sitemap.xml
+Sitemap: https://vantelyo.online/sitemap.xml
