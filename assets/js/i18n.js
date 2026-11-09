@@ -88,7 +88,10 @@ const translations = {
     supportTitle: "Support the project",
     supportIntro: "Vantelyo is an independent, self-funded project. We do not run our own analytics and we do not sell personal data. If our articles or apps have helped you, a small donation helps keep the site and FreshGuard free and private.",
     supportWays: "Ways to support",
-    supportNotAvailable: "Donation options are not configured yet. If you would like to support Vantelyo in the future, please check back later or contact us at heroalfa36@gmail.com.",
+    supportGitHubLabel: "GitHub Sponsors",
+    supportPayPalLabel: "PayPal",
+    supportNoteGitHub: "Opens the publisher’s Sponsors page on GitHub.",
+    supportNotePayPal: "Donations by email for now — we reply with PayPal details.",
     supportNote: "Donations are optional and never required to use the site or apps.",
     legalNotice: "Legal notice",
     editorialPolicy: "Editorial policy",
@@ -182,7 +185,10 @@ const translations = {
     supportTitle: "Soutenir le projet",
     supportIntro: "Vantelyo est un projet indépendant et auto-financé. Nous n'exploitons pas notre propre analyse et ne vendons pas de données personnelles. Si nos articles ou applications vous ont aidé, un petit don aide à garder le site et FreshGuard gratuits et privés.",
     supportWays: "Moyens de soutenir",
-    supportNotAvailable: "Les options de don ne sont pas encore configurées. Si vous souhaitez soutenir Vantelyo à l'avenir, revenez plus tard ou contactez-nous à heroalfa36@gmail.com.",
+    supportGitHubLabel: "GitHub Sponsors",
+    supportPayPalLabel: "PayPal",
+    supportNoteGitHub: "Ouvre la page Sponsors de l’éditeur sur GitHub.",
+    supportNotePayPal: "Dons par email pour l’instant — nous répondons avec les détails PayPal.",
     supportNote: "Les dons sont facultatifs et jamais requis pour utiliser le site ou les applications.",
     legalNotice: "Mentions légales",
     editorialPolicy: "Politique éditoriale",
@@ -276,7 +282,10 @@ const translations = {
     supportTitle: "دعم المشروع",
     supportIntro: "Vantelyo مشروع مستقل وممول ذاتياً. نحن لا نشغّل تحليلاتنا الخاصة ولا نبيع البيانات الشخصية. إذا ساعدتك مقالاتنا أو تطبيقاتنا، فإن تبرعاً صغيراً يساعد في إبقاء الموقع و FreshGuard مجانيين وخاصين.",
     supportWays: "طرق الدعم",
-    supportNotAvailable: "خيارات التبرع غير متوفرة حالياً. إذا أردت دعم Vantelyo مستقبلاً، عد لاحقاً أو تواصل معنا على heroalfa36@gmail.com.",
+    supportGitHubLabel: "رعاية GitHub",
+    supportPayPalLabel: "PayPal",
+    supportNoteGitHub: "تفتح صفحة رعاية الناشر على GitHub.",
+    supportNotePayPal: "التبرعات حالياً بالبريد الإلكتروني — نرد عليك بتفاصيل PayPal.",
     supportNote: "التبرعات اختيارية ولا تُطلب أبداً لاستخدام الموقع أو التطبيقات.",
     legalNotice: "الإشعار القانوني",
     editorialPolicy: "السياسة التحريرية",
@@ -377,3 +386,4 @@ function initI18n() {
   });
   setLang(detectLang(), { save: false });
 }
+
