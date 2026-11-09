@@ -3,13 +3,13 @@
    ========================================= */
 :root {
   --sage: #8FA68B;
-  --sage-dark: #6B8E6B;
+  --sage-dark: #4F6F4F;
   --dark-green: #2D5A27;
   --cream: #FDFBF7;
   --cream-dark: #F5F1E9;
   --white: #FFFFFF;
   --text: #1F2A1F;
-  --text-muted: #6B7A6B;
+  --text-muted: #5F6D5F;
   --accent: #C9A227;
   --border: #E2DCCF;
   --shadow: 0 4px 20px rgba(45, 90, 39, 0.08);
@@ -203,7 +203,7 @@ img {
 
 .btn-primary {
   background: var(--accent);
-  color: var(--white);
+  color: var(--text);
 }
 
 .btn-primary:hover {
@@ -387,7 +387,7 @@ footer {
 }
 
 .footer-col a {
-  color: rgba(255,255,255,0.7);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .footer-col a:hover {
@@ -639,6 +639,11 @@ footer {
 
 .publisher-box strong {
   color: var(--dark-green);
+}
+
+.publisher-box a {
+  color: var(--dark-green);
+  text-decoration: underline;
 }
 
 /* Advertising */
