@@ -4,10 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-  <title>Vantelyo — Admin Editor</title>
+  <title>Vantelyo — Content Editor</title>
   <link rel="stylesheet" href="assets/css/style.css?v=10">
   <style>
     .admin-container { max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; }
+    .admin-sub { color: var(--text-muted); margin: 0 0 1.5rem 0; }
     .admin-tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border); }
     .admin-tabs button { background: none; border: none; padding: 0.75rem 1.5rem; cursor: pointer; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid transparent; }
     .admin-tabs button.active { color: var(--dark-green); border-bottom-color: var(--dark-green); }
@@ -16,194 +17,246 @@
     .form-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; }
     .form-group { margin-bottom: 1rem; }
     .form-group label { display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.3rem; }
-    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 1rem; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 1rem; box-sizing: border-box; }
     .form-group textarea { min-height: 120px; font-family: inherit; }
+    .form-group textarea.code { min-height: 180px; }
     .btn-save { background: var(--dark-green); color: var(--white); border: none; padding: 0.8rem 1.5rem; border-radius: 6px; font-weight: 600; cursor: pointer; }
     .btn-save:hover { background: var(--sage-dark); }
     .btn-export { background: var(--accent); color: var(--white); border: none; padding: 0.8rem 1.5rem; border-radius: 6px; font-weight: 600; cursor: pointer; margin-left: 0.5rem; }
     .btn-export:hover { background: #b8921f; }
+    .btn-cancel-edit { background: transparent; color: var(--text-muted); border: 1px solid var(--border); padding: 0.8rem 1.5rem; border-radius: 6px; font-weight: 600; cursor: pointer; margin-left: 0.5rem; }
+    .btn-cancel-edit:hover { border-color: var(--dark-green); color: var(--dark-green); }
+    .form-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
     .item-list { margin-top: 1rem; }
-    .item-card { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; }
-    .item-card h4 { margin: 0 0 0.5rem 0; color: var(--dark-green); }
-    .item-card p { margin: 0; color: var(--text-muted); font-size: 0.85rem; }
-    .item-actions { display: flex; gap: 0.5rem; }
+    .item-card { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+    .item-card h4 { margin: 0 0 0.35rem 0; color: var(--dark-green); word-break: break-word; }
+    .item-card p { margin: 0; color: var(--text-muted); font-size: 0.85rem; word-break: break-all; }
+    .item-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
     .btn-edit { background: transparent; border: 1px solid var(--border); padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
     .btn-edit:hover { border-color: var(--dark-green); color: var(--dark-green); }
     .btn-delete { background: transparent; border: 1px solid #e57373; color: #e57373; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
     .btn-delete:hover { background: #e57373; color: var(--white); }
     .empty-state { text-align: center; color: var(--text-muted); padding: 2rem; }
-    .import-export { display: flex; gap: 0.5rem; margin-top: 1rem; align-items: center; }
-    #importFile { font-size: 0.85rem; }
-    .alert { padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.9rem; }
+    .alert { padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.9rem; white-space: pre-line; }
     .alert-success { background: #e7f4ea; color: var(--dark-green); border: 1px solid #b8dfc4; }
-    .alert-error { background: #fdecea; color: #e57373; border: 1px solid #f5b7b1; }
-  .admin-gate { position: fixed; inset: 0; background: var(--cream); z-index: 99999; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
-  .admin-gate.hidden { display: none; }
-  .admin-gate-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; max-width: 400px; width: 100%; box-shadow: var(--shadow); text-align: center; }
-  .admin-gate-card h2 { color: var(--dark-green); margin-bottom: 0.5rem; }
-  .admin-gate-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
-  .admin-gate-card input { width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; margin-bottom: 1rem; }
-  .admin-gate-card button { width: 100%; padding: 0.75rem; background: var(--dark-green); color: var(--white); border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
-  .admin-gate-card .error { color: #c0392b; font-size: 0.85rem; margin-top: 0.5rem; display: none; }
-  .admin-gate-card .error.show { display: block; }
-  .admin-logout { margin-left: auto; }
+    .alert-error { background: #fdecea; color: #c0392b; border: 1px solid #f5b7b1; }
+    .alert-info { background: #eef4fb; color: #1d5a8a; border: 1px solid #bcd4ea; }
+    .readonly-chip { display: inline-block; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--cream); border: 1px solid var(--border); padding: 0.1rem 0.45rem; border-radius: 4px; font-size: 0.75rem; color: var(--text-muted); }
+    .featured-badge { display: inline-block; background: var(--accent); color: var(--white); border-radius: 10px; padding: 1px 8px; font-size: 0.7rem; font-weight: 700; vertical-align: middle; }
+    .lang-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; }
+    .lang-grid .form-group { margin-bottom: 0; }
+    .checkbox-row { display: flex; align-items: center; gap: 0.5rem; }
+    .checkbox-row input { width: auto; }
+    .fieldset-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); margin: 1rem 0 0.5rem 0; border-top: 1px dashed var(--border); padding-top: 0.75rem; }
+    .signin-box { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 2.5rem 2rem; max-width: 460px; margin: 2rem auto; text-align: center; box-shadow: var(--shadow); }
+    .signin-box h2 { color: var(--dark-green); margin-top: 0; }
+    .signin-box p { color: var(--text-muted); font-size: 0.9rem; }
+    .btn-github { display: inline-flex; align-items: center; gap: 0.6rem; background: var(--dark-green); color: var(--white); padding: 0.85rem 1.6rem; border-radius: 6px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; font-size: 1rem; }
+    .btn-github:hover { background: var(--sage-dark); }
+    .signin-error { color: #c0392b; font-size: 0.85rem; margin-top: 1rem; display: none; white-space: pre-line; }
+    .signin-error.show { display: block; }
+    .signin-hint { font-size: 0.78rem; color: var(--text-muted); margin-top: 1rem; }
+    #loadingOverlay { position: fixed; inset: 0; background: rgba(250, 248, 242, 0.72); z-index: 99998; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 0.9rem; }
+    #loadingOverlay.show { display: flex; }
+    .spinner { width: 46px; height: 46px; border: 4px solid var(--border); border-top-color: var(--dark-green); border-radius: 50%; animation: vantlyoSpin 0.9s linear infinite; }
+    @keyframes vantlyoSpin { to { transform: rotate(360deg); } }
+    #loadingText { color: var(--dark-green); font-weight: 600; font-size: 0.9rem; }
+    @media (max-width: 720px) {
+      .lang-grid { grid-template-columns: 1fr; }
+      .item-card { flex-direction: column; align-items: flex-start; }
+      .item-actions { align-self: flex-end; }
+      .admin-tabs button { padding: 0.6rem 0.9rem; font-size: 0.9rem; }
+    }
   </style>
 </head>
 <body>
-  <div class="admin-gate" id="adminGate">
-    <div class="admin-gate-card">
-      <h2>🔒 Admin Access</h2>
-      <p>This area is restricted. Enter the admin password to continue.</p>
-      <input type="password" id="adminPassword" placeholder="Password" autocomplete="current-password">
-      <button type="button" id="adminUnlock">Unlock</button>
-      <div class="error" id="adminError">Incorrect password. Try again.</div>
-    </div>
-  </div>
   <header class="header">
     <div class="container">
       <nav class="nav">
         <a href="index.html" class="nav-brand">Vantelyo</a>
-        <a href="admin.html" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Admin</a>
-        <button type="button" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="adminLogout()">Logout</button>
+        <a href="index.html" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.9rem;">← Back to site</a>
+        <button type="button" id="logoutBtn" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem; display: none;">Logout</button>
       </nav>
     </div>
   </header>
 
+  <!-- Loading overlay -->
+  <div id="loadingOverlay" role="status" aria-live="polite">
+    <div class="spinner"></div>
+    <div id="loadingText">Loading…</div>
+  </div>
+
   <div class="admin-container">
-    <h1 style="color: var(--dark-green); margin-bottom: 0.5rem;">🛠️ Content Editor</h1>
-    <p style="color: var(--text-muted); margin-bottom: 2rem;">Add, edit, and manage blog posts and applications. Export JSON to upload to GitHub.</p>
+    <h1 style="color: var(--dark-green); margin-bottom: 0.25rem;">🛠️ Content Editor</h1>
 
-    <div id="alert"></div>
-
-    <div class="admin-tabs">
-      <button class="tab-btn active" data-tab="blog">📝 Blog Posts</button>
-      <button class="tab-btn" data-tab="apps">📱 Applications</button>
+    <!-- Sign-in screen (server-side GitHub OAuth session) -->
+    <div class="signin-box" id="signinBox" hidden>
+      <h2>🔒 Admin access</h2>
+      <p>Sign in with the authorized GitHub account to manage blog posts and applications. Sessions are server-side and expire after 8 hours.</p>
+      <a class="btn-github" id="githubSigninBtn" href="https://api.vantelyo.online/auth/github">
+        <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.66 7.66 0 0 1 8 3.83c.68.01 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        Sign in with GitHub
+      </a>
+      <div class="signin-error" id="signinError"></div>
+      <p class="signin-hint">After signing in you will land on the homepage; open the Admin page again to continue editing.</p>
     </div>
 
-    <!-- Blog Tab -->
-    <div id="tab-blog" class="tab-panel active">
-      <div class="form-card">
-        <h3 style="margin-top: 0;">Add / Edit Blog Post</h3>
-        <form id="blogForm">
-          <input type="hidden" id="blogId">
-          <div class="form-group">
-            <label>Title</label>
-            <input type="text" id="blogTitle" placeholder="e.g. How to Reduce Food Waste at Home" required>
-          </div>
-          <div class="form-group">
-            <label>Slug (URL-friendly)</label>
-            <input type="text" id="blogSlug" placeholder="e.g. how-to-reduce-food-waste" required>
-          </div>
-          <div class="form-group">
-            <label>Category</label>
-            <select id="blogCategory" required>
-              <option value="smart-kitchen">Smart Kitchen (Alimentation & anti-gaspillage)</option>
-              <option value="digital-life">Digital Life (Technologie & productivité)</option>
-              <option value="privacy-security">Privacy & Security (Sécurité numérique)</option>
-              <option value="news">News (Tech & Actualités)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Language</label>
-            <select id="blogLang" required>
-              <option value="en">English</option>
-              <option value="fr">French</option>
-              <option value="ar">Arabic</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Excerpt</label>
-            <textarea id="blogExcerpt" placeholder="Short summary for listing pages" required></textarea>
-          </div>
-          <div class="form-group">
-            <label>Content (HTML)</label>
-            <textarea id="blogContent" placeholder="Full article HTML content" required></textarea>
-          </div>
-          <div class="form-group">
-            <label>Image URL</label>
-            <input type="text" id="blogImage" placeholder="https://images.unsplash.com/...">
-          </div>
-          <div class="form-group">
-            <label>Read Time</label>
-            <input type="text" id="blogReadTime" placeholder="e.g. 5 min">
-          </div>
-          <div class="form-group">
-            <label>Date (YYYY-MM-DD)</label>
-            <input type="date" id="blogDate" required>
-          </div>
-          <div style="display: flex; gap: 0.5rem;">
-            <button type="submit" class="btn-save">Save Post</button>
-            <button type="button" class="btn-export" onclick="exportJSON('blog')">Export blog.json</button>
-          </div>
-        </form>
+    <!-- Editor (visible once authenticated) -->
+    <div id="editorShell" hidden>
+      <p class="admin-sub">Signed in as <strong id="sessionUser">…</strong> · Changes are saved directly to the private GitHub repository through the Vantelyo API.</p>
+      <div id="alert"></div>
+
+      <div class="admin-tabs">
+        <button class="tab-btn active" data-tab="blog">📝 Blog Posts</button>
+        <button class="tab-btn" data-tab="apps">📱 Applications</button>
       </div>
 
-      <div class="item-list">
-        <h3>Existing Posts</h3>
-        <div id="blogList"></div>
-      </div>
-    </div>
+      <!-- Blog Tab -->
+      <div id="tab-blog" class="tab-panel active">
+        <div class="form-card">
+          <h3 style="margin-top: 0;"><span id="blogFormTitle">Add Blog Post</span> <span class="readonly-chip" id="blogEditingChip" hidden>editing</span></h3>
+          <form id="blogForm" novalidate>
+            <input type="hidden" id="blogKey">
+            <div class="form-group">
+              <label for="blogTitle">Title *</label>
+              <input type="text" id="blogTitle" placeholder="e.g. How to Reduce Food Waste at Home" required>
+            </div>
+            <div class="form-group">
+              <label for="blogSlug">Slug (URL-friendly, unique) *</label>
+              <input type="text" id="blogSlug" placeholder="e.g. how-to-reduce-food-waste" required>
+            </div>
+            <div class="form-group">
+              <label for="blogCategory">Category</label>
+              <select id="blogCategory" required>
+                <option value="smart-kitchen">Smart Kitchen (Alimentation &amp; anti-gaspillage)</option>
+                <option value="digital-life">Digital Life (Technologie &amp; productivité)</option>
+                <option value="privacy-security">Privacy &amp; Security (Sécurité numérique)</option>
+                <option value="news">News (Tech &amp; Actualités)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="blogLang">Language</label>
+              <select id="blogLang" required>
+                <option value="en">English</option>
+                <option value="fr">French</option>
+                <option value="ar">Arabic</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="blogExcerpt">Excerpt *</label>
+              <textarea id="blogExcerpt" placeholder="Short summary for listing pages" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="blogContent">Content (HTML) *</label>
+              <textarea id="blogContent" class="code" placeholder="Full article HTML content" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="blogImage">Image URL</label>
+              <input type="text" id="blogImage" placeholder="https://images.unsplash.com/...">
+            </div>
+            <div class="form-group">
+              <label for="blogReadTime">Read Time</label>
+              <input type="text" id="blogReadTime" placeholder="e.g. 5 min">
+            </div>
+            <div class="form-group">
+              <label for="blogDate">Date (YYYY-MM-DD) *</label>
+              <input type="date" id="blogDate" required>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-save" id="blogSubmitBtn">Save Post</button>
+              <button type="button" class="btn-cancel-edit" id="blogCancelBtn" hidden>Cancel</button>
+              <button type="button" class="btn-export" onclick="exportJSON('blog')">Export blog.json</button>
+            </div>
+          </form>
+        </div>
 
-    <!-- Apps Tab -->
-    <div id="tab-apps" class="tab-panel">
-      <div class="form-card">
-        <h3 style="margin-top: 0;">Add / Edit Application</h3>
-        <form id="appForm">
-          <input type="hidden" id="appId">
-          <div class="form-group">
-            <label>App Name</label>
-            <input type="text" id="appName" placeholder="e.g. FreshGuard" required>
-          </div>
-          <div class="form-group">
-            <label>Tagline</label>
-            <input type="text" id="appTagline" placeholder="Short description">
-          </div>
-          <div class="form-group">
-            <label>Description (HTML)</label>
-            <textarea id="appDescription" placeholder="Full app description" required></textarea>
-          </div>
-          <div class="form-group">
-            <label>Category</label>
-            <input type="text" id="appCategory" placeholder="e.g. Smart Kitchen">
-          </div>
-          <div class="form-group">
-            <label>Icon (emoji)</label>
-            <input type="text" id="appIcon" placeholder="🥦" maxlength="2">
-          </div>
-          <div class="form-group">
-            <label>Features (one per line)</label>
-            <textarea id="appFeatures" placeholder="Feature 1\nFeature 2\nFeature 3"></textarea>
-          </div>
-          <div class="form-group">
-            <label>Privacy URL</label>
-            <input type="text" id="appPrivacy" placeholder="./privacy.html">
-          </div>
-          <div class="form-group">
-            <label>Support URL</label>
-            <input type="text" id="appSupport" placeholder="./support.html">
-          </div>
-          <div class="form-group">
-            <label>Play Store URL</label>
-            <input type="text" id="appPlayStore" placeholder="https://play.google.com/...">
-          </div>
-          <div class="form-group">
-            <label>App Store URL</label>
-            <input type="text" id="appAppStore" placeholder="https://apps.apple.com/...">
-          </div>
-          <div class="form-group">
-            <label>Direct APK URL</label>
-            <input type="text" id="appApk" placeholder="https://.../app-release.apk">
-          </div>
-          <div style="display: flex; gap: 0.5rem;">
-            <button type="submit" class="btn-save">Save App</button>
-            <button type="button" class="btn-export" onclick="exportJSON('apps')">Export apps.json</button>
-          </div>
-        </form>
+        <div class="item-list">
+          <h3>Existing Posts (<span id="blogCount">0</span>)</h3>
+          <div id="blogList"></div>
+        </div>
       </div>
 
-      <div class="item-list">
-        <h3>Existing Apps</h3>
-        <div id="appList"></div>
+      <!-- Apps Tab -->
+      <div id="tab-apps" class="tab-panel">
+        <div class="form-card">
+          <h3 style="margin-top: 0;"><span id="appFormTitle">Add Application</span> <span class="readonly-chip" id="appEditingChip" hidden>editing</span></h3>
+          <form id="appForm" novalidate>
+            <input type="hidden" id="appKey">
+            <div class="form-group" id="appIdGroup">
+              <label for="appId">Application ID (unique, lowercase) *</label>
+              <input type="text" id="appId" placeholder="e.g. freshguard" autocomplete="off">
+            </div>
+            <div class="form-group">
+              <label for="appName">Name *</label>
+              <input type="text" id="appName" placeholder="e.g. FreshGuard" required>
+            </div>
+            <div class="fieldset-label">Tagline (EN / FR / AR)</div>
+            <div class="lang-grid">
+              <div class="form-group"><label for="appTagline">Tagline (EN)</label><input type="text" id="appTagline" placeholder="English tagline"></div>
+              <div class="form-group"><label for="appTaglineFr">Tagline (FR)</label><input type="text" id="appTaglineFr" placeholder="Accroche en français"></div>
+              <div class="form-group"><label for="appTaglineAr">Tagline (AR)</label><input type="text" id="appTaglineAr" placeholder="الوصف بالعربية" dir="auto"></div>
+            </div>
+            <div class="fieldset-label">Description (EN / FR / AR)</div>
+            <div class="form-group"><label for="appDescription">Description (EN) *</label><textarea id="appDescription" placeholder="English description" required></textarea></div>
+            <div class="form-group"><label for="appDescriptionFr">Description (FR)</label><textarea id="appDescriptionFr" placeholder="Description française"></textarea></div>
+            <div class="form-group"><label for="appDescriptionAr">Description (AR)</label><textarea id="appDescriptionAr" placeholder="الوصف بالعربية" dir="auto"></textarea></div>
+            <div class="form-group">
+              <label for="appCategory">Category</label>
+              <input type="text" id="appCategory" placeholder="e.g. Smart Kitchen">
+            </div>
+            <div class="form-group">
+              <label for="appIcon">Icon (emoji)</label>
+              <input type="text" id="appIcon" placeholder="🥦" maxlength="4">
+            </div>
+            <div class="fieldset-label">Features (one per line)</div>
+            <div class="form-group"><label for="appFeatures">Features (EN)</label><textarea id="appFeatures" placeholder="Feature 1&#10;Feature 2&#10;Feature 3"></textarea></div>
+            <div class="form-group"><label for="appFeaturesFr">Features (FR)</label><textarea id="appFeaturesFr" placeholder="Fonctionnalité 1&#10;Fonctionnalité 2"></textarea></div>
+            <div class="form-group"><label for="appFeaturesAr">Features (AR)</label><textarea id="appFeaturesAr" placeholder="ميزة 1&#10;ميزة 2" dir="auto"></textarea></div>
+            <div class="form-group">
+              <label for="appScreenshots">Screenshots (one URL per line)</label>
+              <textarea id="appScreenshots" placeholder="https://.../screenshot-1.png&#10;https://.../screenshot-2.png"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="appDetailUrl">Detail page URL</label>
+              <input type="text" id="appDetailUrl" placeholder="freshguard/index.html">
+            </div>
+            <div class="form-group">
+              <label for="appPrivacy">Privacy URL</label>
+              <input type="text" id="appPrivacy" placeholder="./privacy.html">
+            </div>
+            <div class="form-group">
+              <label for="appSupport">Support URL</label>
+              <input type="text" id="appSupport" placeholder="./support.html">
+            </div>
+            <div class="fieldset-label">Download links</div>
+            <div class="form-group">
+              <label for="appPlayStore">Play Store URL</label>
+              <input type="text" id="appPlayStore" placeholder="https://play.google.com/...">
+            </div>
+            <div class="form-group">
+              <label for="appAppStore">App Store URL</label>
+              <input type="text" id="appAppStore" placeholder="https://apps.apple.com/...">
+            </div>
+            <div class="form-group">
+              <label for="appApk">Direct APK URL</label>
+              <input type="text" id="appApk" placeholder="https://.../app-release.apk">
+            </div>
+            <div class="form-group checkbox-row">
+              <input type="checkbox" id="appFeatured">
+              <label for="appFeatured" style="margin: 0; cursor: pointer;">Featured on the homepage</label>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-save" id="appSubmitBtn">Save App</button>
+              <button type="button" class="btn-cancel-edit" id="appCancelBtn" hidden>Cancel</button>
+              <button type="button" class="btn-export" onclick="exportJSON('apps')">Export apps.json</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="item-list">
+          <h3>Existing Apps (<span id="appCount">0</span>)</h3>
+          <div id="appList"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -211,7 +264,7 @@
   <footer>
     <div class="container">
       <div class="footer-bottom">
-        <span>© 2026 Vantelyo. Admin Editor.</span>
+        <span>© 2026 Vantelyo. Content Editor.</span>
       </div>
     </div>
   </footer>
@@ -219,326 +272,687 @@
   <script src="assets/js/i18n.js?v=10"></script>
   <script src="assets/js/main.js?v=10"></script>
   <script>
-    // ---------- Admin Logic ----------
+    'use strict';
+
+    // ---------- Configuration ----------
+    const API_BASE = new URLSearchParams(window.location.search).get('api')
+      || 'https://api.vantelyo.online';
+    const BLOG_PATH = '_data/blog.json';
+    const APPS_PATH = '_data/apps.json';
+
+    // ---------- State ----------
     const state = {
-      blog: JSON.parse(localStorage.getItem('slh_blog') || JSON.stringify({posts: []})),
-      apps: JSON.parse(localStorage.getItem('slh_apps') || JSON.stringify({apps: []}))
+      blog: { posts: [] },
+      apps: { apps: [] },
+      blogSha: null,
+      appsSha: null,
+      csrf: null,
+      user: null,
+      editingBlog: null,   // original post object being edited (or null)
+      editingApp: null     // original app object being edited (or null)
     };
 
-    let currentTab = 'blog';
-    let editId = null;
-    let editType = null;
-
     const alertEl = document.getElementById('alert');
+    const editorShell = document.getElementById('editorShell');
+    const signinBox = document.getElementById('signinBox');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const loadingText = document.getElementById('loadingText');
+
+    // ---------- Helpers ----------
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function todayISO() {
+      return new Date().toISOString().split('T')[0];
+    }
+
+    function keyOfPost(p) {
+      return p && p.id ? ('id:' + p.id) : ('slug:' + (p && p.lang) + ':' + (p && p.slug));
+    }
+
+    function keyOfApp(a) {
+      return 'id:' + (a && a.id);
+    }
+
+    function splitLines(text) {
+      return String(text || '')
+        .split('\n')
+        .map(s => s.trim())
+        .filter(s => s.length > 0);
+    }
+
+    function joinLines(arr) {
+      return Array.isArray(arr) ? arr.join('\n') : '';
+    }
+
+    function slugifyId(name) {
+      return String(name || '')
+        .toLowerCase()
+        .normalize('NFKD')
+        .replace(/[̀-ͯ]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .replace(/-{2,}/g, '-') || 'app';
+    }
 
     function showAlert(msg, type = 'success') {
-      alertEl.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
-      setTimeout(() => alertEl.innerHTML = '', 4000);
+      alertEl.innerHTML = '<div class="alert alert-' + type + '">' + escapeHtml(msg) + '</div>';
+      if (type !== 'error') {
+        setTimeout(() => { alertEl.innerHTML = ''; }, 6000);
+      }
     }
 
-    function switchTab(tab) {
-      currentTab = tab;
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-      document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === `tab-${tab}`));
-      renderList(tab);
-      resetForm(tab);
+    function showLoading(text) {
+      loadingText.textContent = text || 'Loading…';
+      loadingOverlay.classList.add('show');
     }
 
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-    });
+    function hideLoading() {
+      loadingOverlay.classList.remove('show');
+    }
 
-    // ---------- Blog ----------
+    function showSignIn(errorMessage) {
+      editorShell.hidden = true;
+      document.getElementById('logoutBtn').style.display = 'none';
+      signinBox.hidden = false;
+      const errEl = document.getElementById('signinError');
+      if (errorMessage) {
+        errEl.textContent = errorMessage;
+        errEl.classList.add('show');
+      } else {
+        errEl.textContent = '';
+        errEl.classList.remove('show');
+      }
+      document.getElementById('githubSigninBtn').href = API_BASE + '/auth/github';
+    }
+
+    function showEditor() {
+      signinBox.hidden = true;
+      editorShell.hidden = false;
+      document.getElementById('logoutBtn').style.display = '';
+      document.getElementById('sessionUser').textContent = state.user || 'admin';
+    }
+
+    function requireSignIn(message) {
+      state.csrf = null;
+      showSignIn(message || 'Your session expired. Please sign in again.');
+    }
+
+    // ---------- API client ----------
+    async function api(path, options) {
+      const opts = options || {};
+      const method = opts.method || 'GET';
+      const headers = Object.assign({}, opts.headers || {});
+      let body;
+      if (opts.body !== undefined) {
+        headers['Content-Type'] = 'application/json';
+        body = JSON.stringify(opts.body);
+      }
+      if (state.csrf) {
+        headers['X-CSRF-Token'] = state.csrf;
+      }
+
+      let res;
+      try {
+        res = await fetch(API_BASE + path, {
+          method,
+          credentials: 'include',
+          headers,
+          body
+        });
+      } catch (e) {
+        return { ok: false, status: 0, data: null, networkError: true };
+      }
+
+      let data = null;
+      try {
+        data = await res.json();
+      } catch (e) { /* non-JSON body */ }
+
+      return { ok: res.ok, status: res.status, data };
+    }
+
+    function errMsg(res) {
+      if (res.networkError) return 'network unreachable';
+      if (res.data && res.data.error) return res.data.error;
+      return 'HTTP ' + res.status;
+    }
+
+    // ---------- Loading data from GitHub via the Worker ----------
+    async function loadAll() {
+      showLoading('Loading content from GitHub…');
+      const blogRes = await api('/admin/data?path=' + encodeURIComponent(BLOG_PATH));
+      const appsRes = await api('/admin/data?path=' + encodeURIComponent(APPS_PATH));
+      hideLoading();
+
+      if (blogRes.status === 401 || appsRes.status === 401) {
+        requireSignIn('Your session expired. Please sign in again.');
+        return false;
+      }
+
+      const failures = [];
+
+      if (blogRes.ok && blogRes.data && typeof blogRes.data.content === 'string') {
+        try {
+          const parsed = JSON.parse(blogRes.data.content);
+          if (!parsed || !Array.isArray(parsed.posts)) throw new Error('missing posts array');
+          state.blog = parsed;
+          state.blogSha = blogRes.data.sha || null;
+        } catch (e) {
+          failures.push('blog.json (unparseable content)');
+        }
+      } else {
+        failures.push('blog.json (' + errMsg(blogRes) + ')');
+      }
+
+      if (appsRes.ok && appsRes.data && typeof appsRes.data.content === 'string') {
+        try {
+          const parsed = JSON.parse(appsRes.data.content);
+          if (!parsed || !Array.isArray(parsed.apps)) throw new Error('missing apps array');
+          state.apps = parsed;
+          state.appsSha = appsRes.data.sha || null;
+        } catch (e) {
+          failures.push('apps.json (unparseable content)');
+        }
+      } else {
+        failures.push('apps.json (' + errMsg(appsRes) + ')');
+      }
+
+      renderBlogList();
+      renderAppList();
+
+      if (failures.length) {
+        showAlert('Could not load: ' + failures.join(' — '), 'error');
+        return false;
+      }
+      return true;
+    }
+
+    // ---------- Saving a full file (server-confirmed) ----------
+    async function saveFile(path, dataObj, currentSha) {
+      showLoading('Saving to GitHub…');
+      const res = await api('/admin/save', {
+        method: 'POST',
+        body: {
+          path: path,
+          content: JSON.stringify(dataObj, null, 2),
+          sha: currentSha
+        }
+      });
+      hideLoading();
+
+      if (res.ok && res.data && res.data.ok) {
+        return { ok: true, sha: res.data.sha || null, commit: res.data.commit || null };
+      }
+
+      if (res.status === 401) {
+        requireSignIn('Session expired. Please sign in again to save.');
+        return { ok: false, auth: true };
+      }
+
+      if (res.status === 409) {
+        const currentSha = res.data && res.data.currentSha;
+        const detail = currentSha ? ' (GitHub SHA: ' + String(currentSha).slice(0, 7) + '…)' : '';
+        const reload = window.confirm(
+          'This content changed on GitHub since you loaded it' + detail +
+          '.\n\nReload the latest version now? Your unsaved changes in the form will be lost.'
+        );
+        if (reload) {
+          await loadAll();
+          resetBlogForm();
+          resetAppForm();
+        } else {
+          showAlert('Save canceled — this content changed on GitHub. Reload the page or re-fetch before editing again.', 'info');
+        }
+        return { ok: false, conflict: true };
+      }
+
+      showAlert('Save failed: ' + errMsg(res), 'error');
+      return { ok: false };
+    }
+
+    // ---------- Blog: build list item keys safely ----------
+    function findPostByKey(key) {
+      return state.blog.posts.find(p => keyOfPost(p) === key) || null;
+    }
+
+    function findAppByKey(key) {
+      return state.apps.apps.find(a => keyOfApp(a) === key) || null;
+    }
+
+    // =========================================================
+    // BLOG POSTS
+    // =========================================================
     const blogForm = document.getElementById('blogForm');
-    blogForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const category = document.getElementById('blogCategory').value;
-      const lang = document.getElementById('blogLang').value;
-      const labels = {
-        'smart-kitchen': { en: 'Smart Kitchen', fr: 'Cuisine intelligente' },
-        'digital-life': { en: 'Digital Life', fr: 'Vie numérique' },
-        'privacy-security': { en: 'Privacy & Security', fr: 'Confidentialité et sécurité' },
-        news: { en: 'News', fr: 'Actualités' }
-      };
-      const post = {
-        id: document.getElementById('blogId').value || Date.now().toString(),
-        title: document.getElementById('blogTitle').value,
-        slug: document.getElementById('blogSlug').value,
-        category: category,
-        categoryLabel: (labels[category] && labels[category][lang]) || category,
-        excerpt: document.getElementById('blogExcerpt').value,
-        content: document.getElementById('blogContent').value,
-        image: document.getElementById('blogImage').value,
-        readTime: document.getElementById('blogReadTime').value || '',
-        date: document.getElementById('blogDate').value || new Date().toISOString().split('T')[0],
-        lang: lang,
-        author: 'Vantelyo',
-        publisher: 'Vantelyo',
-        updated: new Date().toISOString().split('T')[0]
-      };
+    const blogListEl = document.getElementById('blogList');
 
-      if (editId) {
-        state.blog.posts = state.blog.posts.map(p => p.id === editId ? post : p);
-        showAlert('Post updated.');
-      } else {
-        state.blog.posts.unshift(post);
-        showAlert('Post added.');
-      }
-      localStorage.setItem('slh_blog', JSON.stringify(state.blog));
-      renderList('blog');
-      resetForm('blog');
-    });
+    const BLOG_CATEGORY_LABELS = {
+      'smart-kitchen': { en: 'Smart Kitchen', fr: 'Cuisine intelligente', ar: 'مطبخ ذكي' },
+      'digital-life': { en: 'Digital Life', fr: 'Vie numérique', ar: 'الحياة الرقمية' },
+      'privacy-security': { en: 'Privacy & Security', fr: 'Confidentialité et sécurité', ar: 'الخصوصية والأمان' },
+      news: { en: 'News', fr: 'Actualités', ar: 'أخبار' }
+    };
 
-    function editBlog(id) {
-      const post = state.blog.posts.find(p => p.id === id);
-      if (!post) return;
-      editId = id;
-      editType = 'blog';
-      document.getElementById('blogId').value = post.id;
-      document.getElementById('blogTitle').value = post.title;
-      document.getElementById('blogSlug').value = post.slug;
-      document.getElementById('blogCategory').value = post.category;
-      document.getElementById('blogLang').value = post.lang;
-      document.getElementById('blogExcerpt').value = post.excerpt;
-      document.getElementById('blogContent').value = post.content;
-      document.getElementById('blogImage').value = post.image || '';
-      document.getElementById('blogReadTime').value = post.readTime || '';
-      document.getElementById('blogDate').value = post.date;
-      window.scrollTo(0, 0);
-    }
-
-    function deleteBlog(id) {
-      if (!confirm('Delete this post?')) return;
-      state.blog.posts = state.blog.posts.filter(p => p.id !== id);
-      localStorage.setItem('slh_blog', JSON.stringify(state.blog));
-      if (editId === id) resetForm('blog');
-      renderList('blog');
-      showAlert('Post deleted.');
-    }
-
-    // ---------- Apps ----------
-    const appForm = document.getElementById('appForm');
-    appForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const features = document.getElementById('appFeatures').value.split('\n').map(f => f.trim()).filter(f => f);
-      const app = {
-        id: document.getElementById('appId').value || Date.now().toString(),
-        name: document.getElementById('appName').value,
-        tagline: document.getElementById('appTagline').value,
-        description: document.getElementById('appDescription').value,
-        category: document.getElementById('appCategory').value,
-        icon: document.getElementById('appIcon').value || '📱',
-        features,
-        privacyUrl: document.getElementById('appPrivacy').value || './privacy.html',
-        supportUrl: document.getElementById('appSupport').value || './support.html',
-        downloadLinks: {
-          playStore: document.getElementById('appPlayStore').value || '#',
-          appStore: document.getElementById('appAppStore').value || '#',
-          apk: document.getElementById('appApk').value || '#'
-        },
-        featured: true
-      };
-
-      if (editId) {
-        state.apps.apps = state.apps.apps.map(a => a.id === editId ? app : a);
-        showAlert('App updated.');
-      } else {
-        state.apps.apps.unshift(app);
-        showAlert('App added.');
-      }
-      localStorage.setItem('slh_apps', JSON.stringify(state.apps));
-      renderList('apps');
-      resetForm('apps');
-    });
-
-    function editApp(id) {
-      const app = state.apps.apps.find(a => a.id === id);
-      if (!app) return;
-      editId = id;
-      editType = 'apps';
-      document.getElementById('appId').value = app.id;
-      document.getElementById('appName').value = app.name;
-      document.getElementById('appTagline').value = app.tagline;
-      document.getElementById('appDescription').value = app.description;
-      document.getElementById('appCategory').value = app.category;
-      document.getElementById('appIcon').value = app.icon;
-      document.getElementById('appFeatures').value = (app.features || []).join('\n');
-      document.getElementById('appPrivacy').value = app.privacyUrl;
-      document.getElementById('appSupport').value = app.supportUrl;
-      document.getElementById('appPlayStore').value = app.downloadLinks?.playStore || '#';
-      document.getElementById('appAppStore').value = app.downloadLinks?.appStore || '#';
-      document.getElementById('appApk').value = app.downloadLinks?.apk || '#';
-      window.scrollTo(0, 0);
-    }
-
-    function deleteApp(id) {
-      if (!confirm('Delete this app?')) return;
-      state.apps.apps = state.apps.apps.filter(a => a.id !== id);
-      localStorage.setItem('slh_apps', JSON.stringify(state.apps));
-      if (editId === id) resetForm('apps');
-      renderList('apps');
-      showAlert('App deleted.');
-    }
-
-    // ---------- Render ----------
-    function renderList(type) {
-      const container = document.getElementById(`${type}List`);
-      const items = type === 'blog' ? state.blog.posts : state.apps.apps;
-      container.innerHTML = '';
+    function renderBlogList() {
+      blogListEl.innerHTML = '';
+      const items = state.blog.posts;
+      document.getElementById('blogCount').textContent = items.length;
 
       if (items.length === 0) {
-        container.innerHTML = '<div class="empty-state">No items yet. Add your first one above.</div>';
+        blogListEl.innerHTML = '<div class="empty-state">No posts yet. Add your first one above.</div>';
         return;
       }
 
-      items.forEach(item => {
+      for (const post of items) {
+        const key = keyOfPost(post);
         const el = document.createElement('div');
         el.className = 'item-card';
-        el.innerHTML = `
-          <div>
-            <h4>${item.title || item.name}</h4>
-            <p>${item.slug || ''} • ${item.category || ''} • ${item.lang || ''}</p>
-          </div>
-          <div class="item-actions">
-            <button class="btn-edit" onclick="edit${type.charAt(0).toUpperCase() + type.slice(1)}('${item.id}')">Edit</button>
-            <button class="btn-delete" onclick="delete${type.charAt(0).toUpperCase() + type.slice(1)}('${item.id}')">Delete</button>
-          </div>
-        `;
-        container.appendChild(el);
-      });
-    }
-
-    function resetForm(type) {
-      editId = null;
-      if (type === 'blog') {
-        blogForm.reset();
-        document.getElementById('blogDate').value = new Date().toISOString().split('T')[0];
-      } else {
-        appForm.reset();
+        el.innerHTML =
+          '<div>' +
+            '<h4>' + escapeHtml(post.title) + ' <span class="readonly-chip">' + escapeHtml(post.lang) + '</span></h4>' +
+            '<p>' + escapeHtml(post.slug) + ' · ' + escapeHtml(post.date) + '</p>' +
+          '</div>' +
+          '<div class="item-actions">' +
+            '<button type="button" class="btn-edit" data-action="edit" data-key="' + escapeHtml(key) + '">Edit</button>' +
+            '<button type="button" class="btn-delete" data-action="delete" data-key="' + escapeHtml(key) + '">Delete</button>' +
+          '</div>';
+        blogListEl.appendChild(el);
       }
     }
 
+    function setBlogEditMode(active) {
+      document.getElementById('blogFormTitle').textContent = active ? 'Edit Blog Post' : 'Add Blog Post';
+      document.getElementById('blogSubmitBtn').textContent = active ? 'Save Changes' : 'Save Post';
+      document.getElementById('blogCancelBtn').hidden = !active;
+      document.getElementById('blogEditingChip').hidden = !active;
+    }
+
+    function resetBlogForm() {
+      state.editingBlog = null;
+      blogForm.reset();
+      document.getElementById('blogKey').value = '';
+      document.getElementById('blogDate').value = todayISO();
+      setBlogEditMode(false);
+    }
+
+    function loadPostIntoForm(post) {
+      state.editingBlog = post;
+      document.getElementById('blogKey').value = keyOfPost(post);
+      document.getElementById('blogTitle').value = post.title || '';
+      document.getElementById('blogSlug').value = post.slug || '';
+      document.getElementById('blogCategory').value = post.category || 'smart-kitchen';
+      document.getElementById('blogLang').value = post.lang || 'en';
+      document.getElementById('blogExcerpt').value = post.excerpt || '';
+      document.getElementById('blogContent').value = post.content || '';
+      document.getElementById('blogImage').value = post.image || '';
+      document.getElementById('blogReadTime').value = post.readTime || '';
+      document.getElementById('blogDate').value = post.date || todayISO();
+      setBlogEditMode(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function blogHasDuplicate(field, value, exclude) {
+      const needle = String(value).toLowerCase();
+      return state.blog.posts.some(p =>
+        p !== exclude && String(p[field] || '').toLowerCase() === needle
+      );
+    }
+
+    blogForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const title = document.getElementById('blogTitle').value.trim();
+      const slug = document.getElementById('blogSlug').value.trim();
+      const category = document.getElementById('blogCategory').value;
+      const lang = document.getElementById('blogLang').value;
+      const excerpt = document.getElementById('blogExcerpt').value.trim();
+      const content = document.getElementById('blogContent').value;
+      const image = document.getElementById('blogImage').value.trim();
+      const readTime = document.getElementById('blogReadTime').value.trim();
+      const date = document.getElementById('blogDate').value;
+      const editing = state.editingBlog;
+
+      if (!title || !slug || !excerpt || !content.trim() || !date) {
+        showAlert('Please fill in all required fields (title, slug, excerpt, content, date).', 'error');
+        return;
+      }
+      if (blogHasDuplicate('slug', slug, editing)) {
+        showAlert('A post with this slug already exists. Slugs must be unique.', 'error');
+        return;
+      }
+      if (!editing && blogHasDuplicate('slug', slug, null)) {
+        showAlert('A post with this slug already exists. Slugs must be unique.', 'error');
+        return;
+      }
+
+      const labelMap = BLOG_CATEGORY_LABELS[category] || {};
+      const categoryLabel = labelMap[lang] || labelMap.en || category;
+
+      const post = Object.assign(
+        {},
+        editing || {},
+        {
+          title,
+          slug,
+          category,
+          categoryLabel,
+          excerpt,
+          content,
+          image,
+          readTime,
+          date,
+          lang,
+          updated: todayISO(),
+          alternates: Array.isArray(editing && editing.alternates) ? editing.alternates : []
+        }
+      );
+      if (!editing) {
+        post.id = String(Date.now());
+        post.author = 'Vantelyo';
+        post.publisher = 'Vantelyo';
+      }
+
+      const posts = editing
+        ? state.blog.posts.map(p => (p === editing ? post : p))
+        : [post, ...state.blog.posts];
+      const newData = Object.assign({}, state.blog, { posts });
+
+      const result = await saveFile(BLOG_PATH, newData, state.blogSha);
+      if (!result.ok) return;
+
+      state.blog = newData;
+      state.blogSha = result.sha;
+      renderBlogList();
+      resetBlogForm();
+      showAlert(editing ? 'Post updated and saved to GitHub.' : 'Post added and saved to GitHub.', 'success');
+    });
+
+    document.getElementById('blogCancelBtn').addEventListener('click', resetBlogForm);
+
+    blogListEl.addEventListener('click', async (e) => {
+      const btn = e.target.closest('button[data-action]');
+      if (!btn) return;
+      const key = btn.getAttribute('data-key');
+      const post = findPostByKey(key);
+      if (!post) return;
+
+      if (btn.getAttribute('data-action') === 'edit') {
+        loadPostIntoForm(post);
+        return;
+      }
+
+      // delete
+      const label = post.title || post.slug;
+      if (!window.confirm('Delete the post "' + label + '"?\n\nThis will remove it from _data/blog.json on GitHub.')) return;
+
+      const posts = state.blog.posts.filter(p => p !== post);
+      const newData = Object.assign({}, state.blog, { posts });
+      const result = await saveFile(BLOG_PATH, newData, state.blogSha);
+      if (!result.ok) return;
+
+      state.blog = newData;
+      state.blogSha = result.sha;
+      if (state.editingBlog === post) resetBlogForm();
+      renderBlogList();
+      showAlert('Post deleted and saved to GitHub.', 'success');
+    });
+
+    // =========================================================
+    // APPLICATIONS
+    // =========================================================
+    const appForm = document.getElementById('appForm');
+    const appListEl = document.getElementById('appList');
+
+    function renderAppList() {
+      appListEl.innerHTML = '';
+      const items = state.apps.apps;
+      document.getElementById('appCount').textContent = items.length;
+
+      if (items.length === 0) {
+        appListEl.innerHTML = '<div class="empty-state">No applications yet. Add your first one above.</div>';
+        return;
+      }
+
+      for (const app of items) {
+        const key = keyOfApp(app);
+        const featured = app.featured ? ' <span class="featured-badge">FEATURED</span>' : '';
+        const el = document.createElement('div');
+        el.className = 'item-card';
+        el.innerHTML =
+          '<div>' +
+            '<h4>' + escapeHtml(app.icon || '📱') + ' ' + escapeHtml(app.name) + featured + '</h4>' +
+            '<p>' + escapeHtml(app.id) + ' · ' + escapeHtml(app.category || '') + '</p>' +
+          '</div>' +
+          '<div class="item-actions">' +
+            '<button type="button" class="btn-edit" data-action="edit" data-key="' + escapeHtml(key) + '">Edit</button>' +
+            '<button type="button" class="btn-delete" data-action="delete" data-key="' + escapeHtml(key) + '">Delete</button>' +
+          '</div>';
+        appListEl.appendChild(el);
+      }
+    }
+
+    function setAppEditMode(active) {
+      document.getElementById('appFormTitle').textContent = active ? 'Edit Application' : 'Add Application';
+      document.getElementById('appSubmitBtn').textContent = active ? 'Save Changes' : 'Save App';
+      document.getElementById('appCancelBtn').hidden = !active;
+      document.getElementById('appEditingChip').hidden = !active;
+      document.getElementById('appIdGroup').style.display = active ? 'none' : '';
+    }
+
+    function resetAppForm() {
+      state.editingApp = null;
+      appForm.reset();
+      document.getElementById('appKey').value = '';
+      document.getElementById('appFeatured').checked = true;
+      setAppEditMode(false);
+    }
+
+    function loadAppIntoForm(app) {
+      state.editingApp = app;
+      document.getElementById('appKey').value = keyOfApp(app);
+      document.getElementById('appId').value = app.id || '';
+      document.getElementById('appName').value = app.name || '';
+      document.getElementById('appTagline').value = app.tagline || '';
+      document.getElementById('appTaglineFr').value = app.tagline_fr || '';
+      document.getElementById('appTaglineAr').value = app.tagline_ar || '';
+      document.getElementById('appDescription').value = app.description || '';
+      document.getElementById('appDescriptionFr').value = app.description_fr || '';
+      document.getElementById('appDescriptionAr').value = app.description_ar || '';
+      document.getElementById('appCategory').value = app.category || '';
+      document.getElementById('appIcon').value = app.icon || '';
+      document.getElementById('appFeatures').value = joinLines(app.features);
+      document.getElementById('appFeaturesFr').value = joinLines(app.features_fr);
+      document.getElementById('appFeaturesAr').value = joinLines(app.features_ar);
+      document.getElementById('appScreenshots').value = joinLines(app.screenshots);
+      document.getElementById('appDetailUrl').value = app.detailUrl || '';
+      document.getElementById('appPrivacy').value = app.privacyUrl || '';
+      document.getElementById('appSupport').value = app.supportUrl || '';
+      const links = app.downloadLinks || {};
+      document.getElementById('appPlayStore').value = links.playStore || '';
+      document.getElementById('appAppStore').value = links.appStore || '';
+      document.getElementById('appApk').value = links.apk || '';
+      document.getElementById('appFeatured').checked = Boolean(app.featured);
+      setAppEditMode(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function appIdExists(id, exclude) {
+      const needle = String(id).toLowerCase();
+      return state.apps.apps.some(a => a !== exclude && String(a.id || '').toLowerCase() === needle);
+    }
+
+    appForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const editing = state.editingApp;
+      const name = document.getElementById('appName').value.trim();
+      const description = document.getElementById('appDescription').value.trim();
+
+      if (!name || !description) {
+        showAlert('Please fill in at least the Name and the English description.', 'error');
+        return;
+      }
+
+      let appId = editing ? editing.id : document.getElementById('appId').value.trim().toLowerCase();
+      if (!editing) {
+        if (!appId) appId = slugifyId(name);
+        if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(appId)) {
+          showAlert('Application ID must use lowercase letters, numbers and hyphens.', 'error');
+          return;
+        }
+        if (appIdExists(appId, null)) {
+          showAlert('An application with ID "' + appId + '" already exists.', 'error');
+          return;
+        }
+      }
+
+      const origLinks = (editing && editing.downloadLinks) || {};
+
+      const app = Object.assign(
+        {},
+        editing || {},
+        {
+          id: appId,
+          name,
+          tagline: document.getElementById('appTagline').value.trim(),
+          tagline_fr: document.getElementById('appTaglineFr').value.trim(),
+          tagline_ar: document.getElementById('appTaglineAr').value.trim(),
+          description,
+          description_fr: document.getElementById('appDescriptionFr').value.trim(),
+          description_ar: document.getElementById('appDescriptionAr').value.trim(),
+          category: document.getElementById('appCategory').value.trim(),
+          icon: document.getElementById('appIcon').value.trim() || '📱',
+          features: splitLines(document.getElementById('appFeatures').value),
+          features_fr: splitLines(document.getElementById('appFeaturesFr').value),
+          features_ar: splitLines(document.getElementById('appFeaturesAr').value),
+          screenshots: splitLines(document.getElementById('appScreenshots').value),
+          detailUrl: document.getElementById('appDetailUrl').value.trim(),
+          privacyUrl: document.getElementById('appPrivacy').value.trim() || './privacy.html',
+          supportUrl: document.getElementById('appSupport').value.trim() || './support.html',
+          downloadLinks: Object.assign({}, origLinks, {
+            playStore: document.getElementById('appPlayStore').value.trim() || '#',
+            appStore: document.getElementById('appAppStore').value.trim() || '#',
+            apk: document.getElementById('appApk').value.trim() || '#'
+          }),
+          featured: document.getElementById('appFeatured').checked
+        }
+      );
+
+      const apps = editing
+        ? state.apps.apps.map(a => (a === editing ? app : a))
+        : [app, ...state.apps.apps];
+      const newData = Object.assign({}, state.apps, { apps });
+
+      const result = await saveFile(APPS_PATH, newData, state.appsSha);
+      if (!result.ok) return;
+
+      state.apps = newData;
+      state.appsSha = result.sha;
+      renderAppList();
+      resetAppForm();
+      showAlert(editing ? 'Application updated and saved to GitHub.' : 'Application added and saved to GitHub.', 'success');
+    });
+
+    document.getElementById('appCancelBtn').addEventListener('click', resetAppForm);
+
+    appListEl.addEventListener('click', async (e) => {
+      const btn = e.target.closest('button[data-action]');
+      if (!btn) return;
+      const key = btn.getAttribute('data-key');
+      const app = findAppByKey(key);
+      if (!app) return;
+
+      if (btn.getAttribute('data-action') === 'edit') {
+        loadAppIntoForm(app);
+        return;
+      }
+
+      // delete
+      if (!window.confirm('Delete the application "' + (app.name || app.id) + '"?\n\nThis will remove it from _data/apps.json on GitHub.')) return;
+
+      const apps = state.apps.apps.filter(a => a !== app);
+      const newData = Object.assign({}, state.apps, { apps });
+      const result = await saveFile(APPS_PATH, newData, state.appsSha);
+      if (!result.ok) return;
+
+      state.apps = newData;
+      state.appsSha = result.sha;
+      if (state.editingApp === app) resetAppForm();
+      renderAppList();
+      showAlert('Application deleted and saved to GitHub.', 'success');
+    });
+
+    // =========================================================
+    // TABS
+    // =========================================================
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        tabButtons.forEach(b => b.classList.toggle('active', b === btn));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + tab));
+      });
+    });
+
+    // =========================================================
+    // EXPORT (kept from the previous version)
+    // =========================================================
     function exportJSON(type) {
       const data = type === 'blog' ? state.blog : state.apps;
-      const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${type}.json`;
+      a.download = type + '.json';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      showAlert(`${type}.json exported. Upload it to _data/ folder on GitHub.`);
+      showAlert(type + '.json exported.', 'info');
     }
+    window.exportJSON = exportJSON;
 
-    // Initialize with seed data if empty
-    if (state.blog.posts.length === 0) {
-      state.blog.posts = [
-        {
-          id: "1", title: "How to Reduce Food Waste at Home", slug: "how-to-reduce-food-waste-at-home",
-          category: "smart-kitchen", categoryLabel: "Smart Kitchen",
-          excerpt: "Simple habits to track expiry dates, organize your fridge, and save money every week.",
-          content: "<p>Simple habits to track expiry dates, organize your fridge, and save money every week.</p>",
-          image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=900&auto=format&fit=crop",
-          readTime: "5 min", date: "2026-10-20", lang: "en"
-        },
-        {
-          id: "2", title: "Best Food Expiry Date Tracker Apps", slug: "best-food-expiry-date-tracker-apps",
-          category: "smart-kitchen", categoryLabel: "Smart Kitchen",
-          excerpt: "A comparison of top apps to prevent food waste, featuring FreshGuard.",
-          content: "<p>A comparison of top apps to prevent food waste, featuring FreshGuard.</p>",
-          image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=900&auto=format&fit=crop",
-          readTime: "6 min", date: "2026-10-22", lang: "en"
-        },
-        {
-          id: "3", title: "Best Free Android Productivity Apps 2026", slug: "best-android-productivity-apps-2026",
-          category: "digital-life", categoryLabel: "Digital Life",
-          excerpt: "Tools to organize your digital life and upcoming mobile projects.",
-          content: "<p>From task managers to note-taking apps...</p>",
-          image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=900&auto=format&fit=crop",
-          readTime: "6 min", date: "2026-10-25", lang: "en"
-        },
-        {
-          id: "4", title: "Mobile App Privacy: What to Check Before Installing", slug: "mobile-app-privacy-checklist",
-          category: "privacy-security", categoryLabel: "Privacy & Security",
-          excerpt: "Permissions, data collection, and local-first apps explained.",
-          content: "<p>Before installing any app, check what permissions it asks for...</p>",
-          image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=900&auto=format&fit=crop",
-          readTime: "5 min", date: "2026-10-27", lang: "en"
-        }
-      ];
-      localStorage.setItem('slh_blog', JSON.stringify(state.blog));
-    }
+    // =========================================================
+    // LOGOUT
+    // =========================================================
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      showLoading('Signing out…');
+      await api('/auth/logout', { method: 'POST', body: {} });
+      hideLoading();
+      state.csrf = null;
+      state.user = null;
+      showSignIn('You have been signed out.');
+    });
 
-    if (state.apps.apps.length === 0) {
-      state.apps.apps = [
-        {
-          id: "freshguard", name: "FreshGuard",
-          tagline: "Anti-food-waste inventory with expiry reminders",
-          description: "FreshGuard helps you track food expiry dates, reduce waste, and save money.",
-          category: "Smart Kitchen", icon: "🥦",
-          features: ["Inventory by location", "Barcode scanner", "Expiry reminders", "Recipes", "Savings stats", "4 languages"],
-          privacyUrl: "./privacy.html", supportUrl: "./support.html",
-          downloadLinks: { playStore: "#", appStore: "#", apk: "#" },
-          featured: true
-        }
-      ];
-      localStorage.setItem('slh_apps', JSON.stringify(state.apps));
-    }
+    // =========================================================
+    // INIT
+    // =========================================================
+    async function init() {
+      showLoading('Checking your session…');
+      const res = await api('/auth/me');
+      hideLoading();
 
-    renderList('blog');
-  </script>
-
-  <script>
-    (function () {
-      const GATE_HASH = '50a3b1dbace7cb8ea7f86d5b122b9be31ad0a2545ab2399ff144321b0b1c2344';
-      const SESSION_KEY = 'sli_admin_auth';
-      const gate = document.getElementById('adminGate');
-      const input = document.getElementById('adminPassword');
-      const btn = document.getElementById('adminUnlock');
-      const err = document.getElementById('adminError');
-
-      function sha256(text) {
-        if (window.crypto && window.crypto.subtle) {
-          const enc = new TextEncoder().encode(text);
-          return window.crypto.subtle.digest('SHA-256', enc).then(function (buf) {
-            return Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
-          });
-        }
-        return Promise.resolve(null);
+      if (res.ok && res.data && res.data.authenticated) {
+        state.user = res.data.login || 'admin';
+        state.csrf = res.data.csrf || null;
+        showEditor();
+        resetBlogForm();
+        resetAppForm();
+        await loadAll();
+      } else {
+        showSignIn(res.networkError
+          ? 'Could not reach the API (' + API_BASE + '). Check your connection and try again.'
+          : null);
       }
+    }
 
-      function unlock() {
-        sha256(input.value).then(function (hash) {
-          if (hash === GATE_HASH) {
-            try { sessionStorage.setItem(SESSION_KEY, '1'); } catch (e) {}
-            gate.classList.add('hidden');
-          } else {
-            err.classList.add('show');
-            input.value = '';
-            input.focus();
-          }
-        });
-      }
-
-      try {
-        if (sessionStorage.getItem(SESSION_KEY) === '1') {
-          gate.classList.add('hidden');
-        }
-      } catch (e) {}
-
-      btn.addEventListener('click', unlock);
-      input.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') unlock();
-      });
-
-      // Expose a global logout helper
-      window.adminLogout = function () {
-        try { sessionStorage.removeItem(SESSION_KEY); } catch (e) {}
-        location.reload();
-      };
-    })();
+    init();
   </script>
 </body>
 </html>
