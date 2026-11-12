@@ -427,8 +427,10 @@
     // ---------- Loading data from GitHub via the Worker ----------
     async function loadAll() {
       showLoading('Loading content from GitHub…');
-      const blogRes = await api('/admin/data?path=' + encodeURIComponent(BLOG_PATH));
-      const appsRes = await api('/admin/data?path=' + encodeURIComponent(APPS_PATH));
+      // Chemins constants internes (caractères sûrs) envoyés BRUTS :
+      // le Worker applique l'allowlist sur la valeur non décodée.
+      const blogRes = await api('/admin/data?path=' + BLOG_PATH);
+      const appsRes = await api('/admin/data?path=' + APPS_PATH);
       hideLoading();
 
       if (blogRes.status === 401 || appsRes.status === 401) {
