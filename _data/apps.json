@@ -46,7 +46,7 @@
       "downloadLinks": {
         "playStore": "#",
         "appStore": "#",
-        "apk": "#"
+        "apk": "https://github.com/weblachgarismail-spec/freshguard/releases/download/v1.0.0/app-release.apk"
       },
       "privacyUrl": "./privacy.html",
       "supportUrl": "./support.html",
