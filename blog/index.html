@@ -884,7 +884,7 @@
         render(activeFilter);
       });
 
-      fetch('../_data/blog.json', { cache: 'no-store' })
+      fetch('../_data/blog.json?v=' + Date.now(), { cache: 'no-store' })
         .then(function (response) {
           if (!response.ok) {
             throw new Error('HTTP ' + response.status + ' while loading blog.json');
