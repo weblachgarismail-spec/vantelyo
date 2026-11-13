@@ -132,7 +132,7 @@ img {
 .lang-switch {
   display: flex;
   gap: 0.25rem;
-  margin-left: 1rem;
+  margin-inline-start: 1rem;
 }
 
 .lang-btn {
@@ -238,7 +238,7 @@ img {
 /* Cards */
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
   gap: 2rem;
 }
 
@@ -296,7 +296,7 @@ img {
 /* Blog */
 .blog-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
   gap: 2rem;
 }
 
@@ -367,7 +367,7 @@ footer {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
   gap: 2rem;
   margin-bottom: 2rem;
 }
@@ -513,7 +513,8 @@ footer {
 
 .article-body ul,
 .article-body ol {
-  margin: 0 0 1rem 1.5rem;
+  margin: 0 0 1rem;
+  margin-inline-start: 1.5rem;
 }
 
 .article-body li {
@@ -563,7 +564,7 @@ footer {
 .article-body td {
   border: 1px solid var(--border);
   padding: 0.55rem 0.7rem;
-  text-align: left;
+  text-align: start;
   vertical-align: top;
 }
 
@@ -571,11 +572,6 @@ footer {
   background: var(--cream-dark);
   color: var(--dark-green);
   font-weight: 600;
-}
-
-[dir="rtl"] .article-body th,
-[dir="rtl"] .article-body td {
-  text-align: right;
 }
 
 .lang-alt {
@@ -606,7 +602,8 @@ footer {
 }
 
 .related-reading ul {
-  margin: 0 0 0 1.25rem;
+  margin: 0;
+  margin-inline-start: 1.25rem;
   padding: 0;
 }
 
@@ -620,11 +617,6 @@ footer {
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 2px;
-}
-
-[dir="rtl"] .related-reading ul {
-  margin-right: 1.25rem;
-  margin-left: 0;
 }
 
 .publisher-box {
@@ -751,17 +743,17 @@ footer {
 /* Accessibility helpers */
 .skip-link {
   position: absolute;
-  left: -9999px;
+  inset-inline-start: -9999px;
   top: 0;
   background: var(--dark-green);
   color: var(--white);
   padding: 0.6rem 1rem;
-  border-radius: 0 0 6px 0;
+  border-radius: 0 0 6px 6px;
   z-index: 10000;
 }
 
 .skip-link:focus {
-  left: 0;
+  inset-inline-start: 0;
 }
 
 @media (max-width: 640px) {
@@ -778,12 +770,6 @@ footer {
   .article-header h1 {
     font-size: 1.6rem;
   }
-}
-
-[dir="rtl"] .article-body ul,
-[dir="rtl"] .article-body ol {
-  margin-right: 1.5rem;
-  margin-left: 0;
 }
 
 [dir="rtl"] .consent-inner {
