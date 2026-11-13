@@ -1,0 +1,48 @@
+name: Rebuild static blog pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "_data/blog.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    # Prevent infinite loops: the bot's own commit contains [skip ci]
+    if: "github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Detect stale pages
+        id: check
+        run: |
+          node scripts/build-blog.mjs --check > check.log 2>&1 && echo "stale=0" >> "$GITHUB_OUTPUT" || echo "stale=1" >> "$GITHUB_OUTPUT"
+          cat check.log
+
+      - name: Rebuild static article pages from _data/blog.json
+        if: steps.check.outputs.stale == '1'
+        run: node scripts/build-blog.mjs --write
+
+      - name: Commit regenerated pages
+        if: steps.check.outputs.stale == '1'
+        run: |
+          git config user.name "vantelyo-blog-bot"
+          git config user.email "vantelyo-blog-bot@users.noreply.github.com"
+          git add blog/*.html
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "chore(blog): rebuild static article pages from blog.json [skip ci]"
+          git push origin main
