@@ -74,6 +74,12 @@ img {
   margin-bottom: 0.75rem;
 }
 
+.section-header h1 {
+  font-size: 2rem;
+  color: var(--dark-green);
+  margin-bottom: 0.75rem;
+}
+
 .section-header p {
   color: var(--text-muted);
   max-width: 600px;
@@ -261,6 +267,11 @@ img {
   color: var(--sage-dark);
 }
 
+.card h1 {
+  font-size: 1.5em;
+  font-weight: 700;
+}
+
 .card h3 {
   font-size: 1.25rem;
   color: var(--dark-green);
@@ -282,6 +293,12 @@ img {
 }
 
 .app-hero h2 {
+  font-size: 2rem;
+  color: var(--dark-green);
+  margin-bottom: 1rem;
+}
+
+.app-hero h1 {
   font-size: 2rem;
   color: var(--dark-green);
   margin-bottom: 1rem;
