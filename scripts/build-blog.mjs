@@ -144,11 +144,17 @@ function patch(file, post) {
     `</script>`;
   html = rep(html, /<script type="application\/ld\+json">\{\s*"@context":"https:\/\/schema.org","@type":"BlogPosting"[\s\S]*?<\/script>/, () => blogPosting, 'BlogPosting');
 
-  // --- JSON-LD BreadcrumbList ---
+  // --- JSON-LD BreadcrumbList (labels localized per article language) ---
+  const BREADCRUMB_LABELS = {
+    en: ['Home', 'Blog'],
+    fr: ['Accueil', 'Blog'],
+    ar: ['الرئيسية', 'المدونة']
+  };
+  const [homeLabel, blogLabel] = BREADCRUMB_LABELS[post.lang] || BREADCRUMB_LABELS.en;
   const breadcrumb =
     `<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList",` +
-    `"itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"${SITE}/"},` +
-    `{"@type":"ListItem","position":2,"name":"Blog","item":"${SITE}/blog/"},` +
+    `"itemListElement":[{"@type":"ListItem","position":1,"name":"${homeLabel}","item":"${SITE}/"},` +
+    `{"@type":"ListItem","position":2,"name":"${blogLabel}","item":"${SITE}/blog/"},` +
     `{"@type":"ListItem","position":3,"name":"${jsonEsc(post.title)}","item":"${fileUrl(post.slug)}"}]}` +
     `</script>`;
   html = rep(html, /<script type="application\/ld\+json">\{\s*"@context":"https:\/\/schema.org","@type":"BreadcrumbList"[\s\S]*?<\/script>/, () => breadcrumb, 'BreadcrumbList');
