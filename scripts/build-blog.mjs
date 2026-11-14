@@ -78,6 +78,19 @@ function patch(file, post) {
   let html = normalizeEol(read(file), eol);
   const base = path.basename(file);
 
+  // --- Google Analytics 4 (auto-injected if missing) ---
+  const GA_SNIPPET = `  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LFHT47EQT4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-LFHT47EQT4');
+  </script>
+`;
+  if (!html.includes('gtag/js?id=G-LFHT47EQT4')) {
+    html = html.replace('<head>', '<head>\n' + GA_SNIPPET);
+  }
+
   // --- <title> ---
   html = rep(html, /<title>[^<]*<\/title>/, `<title>${textEsc(post.title)} — Vantelyo</title>`, 'title');
 
