@@ -883,7 +883,8 @@
           "lang": "fr",
           "slug": "organiser-ecran-accueil-telephone"
         }
-      ]
+      ],
+      "static": true
     },
     {
       "slug": "قائمة-التحقق-لخصوصية-التطبيقات",
@@ -906,7 +907,8 @@
           "lang": "fr",
           "slug": "confidentialite-applications-mobiles"
         }
-      ]
+      ],
+      "static": true
     },
     {
       "slug": "لماذا-يهم-التخزين-المحلي",
@@ -929,7 +931,8 @@
           "lang": "fr",
           "slug": "pourquoi-stockage-local-important"
         }
-      ]
+      ],
+      "static": true
     },
     {
       "slug": "فهم-أذونات-التطبيقات",
@@ -952,7 +955,8 @@
           "lang": "fr",
           "slug": "comprendre-autorisations-applications"
         }
-      ]
+      ],
+      "static": true
     }
   ]
 }
