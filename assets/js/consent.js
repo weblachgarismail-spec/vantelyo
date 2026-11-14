@@ -2,6 +2,12 @@
    Vantelyo — Consent & AdSense
    Ads stay disabled until a real publisher ID
    is configured below AND the visitor opts in.
+   Smart display: the banner only auto-opens
+   when ads are configured, after a short delay
+   or the first meaningful scroll — never on
+   first paint. The footer link always opens it
+   on demand. Esc = Reject all. Choices expire
+   after 6 months.
    ========================================= */
 (function () {
   'use strict';
@@ -10,9 +16,16 @@
   // Leave empty to keep ads disabled.
   var ADSENSE_CLIENT = '';
   var CONSENT_KEY = 'sli-consent';
+  var CONSENT_MAX_AGE_MS = 180 * 24 * 60 * 60 * 1000; // 6 months
+  var AUTO_OPEN_DELAY_MS = 3500;                       // show at the earliest ~3.5s
+  var AUTO_OPEN_SCROLL_RATIO = 0.15;                   // or after 15% of viewport scrolled
 
   function tr(key, fallback) {
     return typeof t === 'function' ? t(key) : fallback;
+  }
+
+  function isExpired(ts) {
+    return typeof ts === 'number' && ts > 0 && Date.now() - ts > CONSENT_MAX_AGE_MS;
   }
 
   function readConsent() {
@@ -23,10 +36,12 @@
       if (raw === 'accepted') return { necessary: true, analytics: true, ads: true };
       if (raw === 'declined') return { necessary: true, analytics: false, ads: false };
       var parsed = JSON.parse(raw);
+      if (isExpired(parsed && parsed.ts)) return null;
       return {
         necessary: true,
         analytics: !!parsed.analytics,
-        ads: !!parsed.ads
+        ads: !!parsed.ads,
+        ts: parsed.ts
       };
     } catch (e) {
       return null;
@@ -133,23 +148,32 @@
     );
   }
 
-  function buildBanner(current) {
+  // focusBanner: true when the visitor explicitly asked for the panel
+  // (footer link) so keyboard focus lands on the first action. Auto-open
+  // (delay/scroll) passes false to avoid stealing focus from reading.
+  function buildBanner(current, focusBanner) {
     var choice = current || { necessary: true, analytics: false, ads: false };
+    var showAdsOption = hasRealClient();
     var banner = document.createElement('div');
     banner.className = 'consent-banner';
     banner.setAttribute('role', 'dialog');
     banner.setAttribute('aria-modal', 'false');
+    banner.setAttribute('aria-labelledby', 'consent-banner-title');
     banner.setAttribute('aria-label', tr('consentTitle', 'Cookie and advertising preferences'));
+    var optionsHtml =
+      checkbox('necessary', tr('consentNecessary', 'Essential'), tr('consentNecessaryDesc', 'Required for the site to work. Always on.'), true, true) +
+      checkbox('analytics', tr('consentAnalytics', 'Analytics'), tr('consentAnalyticsDesc', 'Anonymous audience measurement.'), choice.analytics, false) +
+      (showAdsOption
+        ? checkbox('ads', tr('consentAds', 'Advertising'), tr('consentAdsDesc', 'Google AdSense advertising cookies.'), choice.ads, false)
+        : '');
     banner.innerHTML =
       '<div class="consent-inner">' +
         '<div class="consent-text">' +
-          '<strong>' + tr('consentTitle', 'Cookie and advertising preferences') + '</strong>' +
-          '<p>' + tr('consentText', 'We use essential cookies to run this site. With your consent, we may also use Google AdSense cookies to show ads. You can accept, reject, or choose categories.') + '</p>' +
+          '<strong id="consent-banner-title">' + tr('consentTitle', 'Cookie and advertising preferences') + '</strong>' +
+          '<p id="consent-banner-desc">' + tr('consentText', 'We use essential storage to run this site. With your consent, we may measure anonymous audience statistics and, when ads are available, show Google AdSense ads. You can accept, reject, or save your choices.') + '</p>' +
         '</div>' +
-        '<div class="consent-options" role="group" aria-label="' + tr('consentTitle', 'Cookie and advertising preferences') + '">' +
-          checkbox('necessary', tr('consentNecessary', 'Essential'), tr('consentNecessaryDesc', 'Required for the site to work. Always on.'), true, true) +
-          checkbox('analytics', tr('consentAnalytics', 'Analytics'), tr('consentAnalyticsDesc', 'Anonymous audience measurement.'), choice.analytics, false) +
-          checkbox('ads', tr('consentAds', 'Advertising'), tr('consentAdsDesc', 'Google AdSense advertising cookies.'), choice.ads, false) +
+        '<div class="consent-options" role="group" aria-labelledby="consent-banner-title">' +
+          optionsHtml +
         '</div>' +
         '<div class="consent-actions">' +
           '<button type="button" class="btn btn-outline consent-reject">' + tr('consentRejectAll', 'Reject all') + '</button>' +
@@ -157,22 +181,32 @@
           '<button type="button" class="btn btn-primary consent-accept">' + tr('consentAcceptAll', 'Accept all') + '</button>' +
         '</div>' +
       '</div>';
+    banner.setAttribute('aria-describedby', 'consent-banner-desc');
     document.body.appendChild(banner);
+
+    function onKeydown(e) {
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        e.preventDefault();
+        applyChoice({ necessary: true, analytics: false, ads: false });
+        close();
+      }
+    }
+
+    function close() {
+      document.removeEventListener('keydown', onKeydown, true);
+      banner.remove();
+    }
 
     function readBoxes() {
       return {
         necessary: true,
         analytics: !!banner.querySelector('#analytics').checked,
-        ads: !!banner.querySelector('#ads').checked
+        ads: showAdsOption ? !!banner.querySelector('#ads').checked : false
       };
     }
 
-    function close() {
-      banner.remove();
-    }
-
     banner.querySelector('.consent-accept').addEventListener('click', function () {
-      applyChoice({ necessary: true, analytics: true, ads: true });
+      applyChoice({ necessary: true, analytics: true, ads: showAdsOption });
       close();
     });
     banner.querySelector('.consent-reject').addEventListener('click', function () {
@@ -183,6 +217,12 @@
       applyChoice(readBoxes());
       close();
     });
+    document.addEventListener('keydown', onKeydown, true);
+
+    if (focusBanner) {
+      var first = banner.querySelector('.consent-accept');
+      if (first) first.focus();
+    }
 
     return banner;
   }
@@ -190,7 +230,33 @@
   function openSettings() {
     var existing = document.querySelector('.consent-banner');
     if (existing) existing.remove();
-    buildBanner(readConsent());
+    buildBanner(readConsent(), true);
+  }
+
+  // Auto-open the banner only after a short delay or the first meaningful
+  // scroll — whichever comes first — and never more than once per visit.
+  // The auto-open is gated on a real AdSense client: with no ads configured,
+  // visitors are not nagged about consent for something that does not exist.
+  function scheduleBanner() {
+    var done = false;
+    var timer = null;
+    function show() {
+      if (done) return;
+      done = true;
+      window.removeEventListener('scroll', onScroll);
+      if (timer) clearTimeout(timer);
+      // Re-check at trigger time in case the visitor answered via the footer already.
+      if (document.querySelector('.consent-banner')) return;
+      if (readConsent()) return;
+      buildBanner(null, false);
+    }
+    function onScroll() {
+      var y = window.scrollY || document.documentElement.scrollTop || 0;
+      var threshold = Math.max(120, window.innerHeight * AUTO_OPEN_SCROLL_RATIO);
+      if (y >= threshold) show();
+    }
+    timer = setTimeout(show, AUTO_OPEN_DELAY_MS);
+    window.addEventListener('scroll', onScroll, { passive: true });
   }
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -212,7 +278,11 @@
       }
     } else {
       disableAds();
-      buildBanner(null);
+      if (hasRealClient()) {
+        scheduleBanner();
+      }
+      // If ads are not configured yet, the banner stays hidden; the footer
+      // "Cookie settings" link still opens it on demand.
     }
   });
 })();
