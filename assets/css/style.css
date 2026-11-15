@@ -499,6 +499,7 @@ footer {
 
 .article-cover {
   width: 100%;
+  aspect-ratio: 3 / 2;
   max-height: 420px;
   object-fit: cover;
   border-radius: var(--radius);
