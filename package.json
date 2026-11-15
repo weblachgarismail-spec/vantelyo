@@ -1,0 +1,12 @@
+{
+  "name": "vantelyo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vantelyo — Technology. Apps. Smarter Living. Static multilingual site (EN/FR/AR) + FreshGuard.",
+  "scripts": {
+    "build:favicon": "node scripts/build-favicon.mjs"
+  },
+  "devDependencies": {
+    "sharp": "^0.33.5"
+  }
+}
