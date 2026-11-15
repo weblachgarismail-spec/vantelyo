@@ -184,7 +184,7 @@ function patch(file, post) {
   );
 
   // --- Cover image ---
-  html = rep(html, /<img class="article-cover"[^>]*>/, `<img class="article-cover" src="${attrEsc(post.image)}" alt="${attrEsc(post.title)}" loading="eager">`, 'cover');
+  html = rep(html, /<img class="article-cover"[^>]*>/, `<img class="article-cover" src="${attrEsc(post.image)}" alt="${attrEsc(post.title)}" width="900" height="600" loading="eager">`, 'cover');
 
   // --- Article body (content is trusted, authored HTML) ---
   const bodyMarkup =
