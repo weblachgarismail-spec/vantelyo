@@ -66,10 +66,10 @@
     return /^ca-pub-\d{10,}$/.test(ADSENSE_CLIENT);
   }
 
-  // Google Consent Mode v2. We always push a denied default first, then update
-  // it to match the visitor's choice. This keeps the signal correct if a
-  // Google tag or AdSense script is loaded later.
-  function pushConsent(type, choice) {
+  // Google Consent Mode v2. The denied "default" is pushed inline first on
+  // every page (before gtag('js') and gtag('config')). This function pushes
+  // "update" afterwards to match the visitor's explicit choice.
+  function pushConsentUpdate(choice) {
     window.dataLayer = window.dataLayer || [];
     window.gtag = window.gtag || function () {
       window.dataLayer.push(arguments);
@@ -82,11 +82,11 @@
       ad_personalization: ads,
       analytics_storage: analytics
     };
-    if (type === 'default') payload.wait_for_update = 500;
-    window.gtag('consent', type, payload);
+    window.gtag('consent', 'update', payload);
   }
 
-  pushConsent('default', null);
+  // The denied consent default is pushed inline on each page before any
+  // gtag command; consent.js does not push it again (would be a double push).
 
   function loadAdSense() {
     if (!hasRealClient()) return;
@@ -127,7 +127,7 @@
 
   function applyChoice(choice) {
     writeConsent(choice);
-    pushConsent('update', choice);
+    pushConsentUpdate(choice);
     if (choice.ads) {
       loadAdSense();
     } else {
@@ -270,7 +270,7 @@
 
     var consent = readConsent();
     if (consent) {
-      pushConsent('update', consent);
+      pushConsentUpdate(consent);
       if (consent.ads) {
         loadAdSense();
       } else {
