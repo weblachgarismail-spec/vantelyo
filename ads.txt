@@ -2,5 +2,4 @@
 # Replace pub-XXXXXXXXXXXXXXXX with your AdSense publisher ID before enabling ads.
 # Example: google.com, pub-1234567890123456, DIRECT, f08c47fec0942fa0
 
-# Uncomment and edit the line below when AdSense is approved:
-# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+google.com, pub-6577819851333501, DIRECT, f08c47fec0942fa0
